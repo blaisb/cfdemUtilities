@@ -1,4 +1,4 @@
-# Last Modified: Tue 01 Apr 2014 12:22:00 PM EDT
+# Last Modified: Mon 27 Oct 2014 02:46:01 PM CET
 # This program makes the log-log plot for L2 error and outputs the order of convergence (slope) as a printed output
 # Graphic is in better shape now
 
@@ -18,7 +18,6 @@ import pylab
 #===================
 # MAIN PROGRAM
 #===================
-
 fname = sys.argv[1]
 
 # Input file
@@ -43,13 +42,17 @@ plt.xlabel('$\Delta x$')
 
 # Regression
 a,b = numpy.polyfit(numpy.log(dx),numpy.log(l2E),1)
-ax.text(0.02,0.01, r'$\log(L^2)=%2.2f  \log(\Delta x) %2.2f$' %(a,b), fontsize=15)
+
+if (b<0):
+    ax.text(0.02,0.01, r'$\log(L^2)=%2.2f  \log(\Delta x) %2.2f$' %(a,b), fontsize=15)
+else :
+    ax.text(0.02,0.01, r'$\log(L^2)=%2.2f  \log(\Delta x) + %2.2f$' %(a,b), fontsize=15)
 
 ax.grid(b=True, which='minor', color='r', linestyle='--')
 ax.grid(b=True, which='major', color='k', linestyle='-') 
 ax.plot(dx,numpy.exp(b) * dx**a,label="Linear regression")
 
-print 'A = ', a
+print 'Slope is = \t', a
 
 plt.savefig("./L2Error.png")
 plt.show()

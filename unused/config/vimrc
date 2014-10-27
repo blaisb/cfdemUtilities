@@ -1,0 +1,33 @@
+"Personnal VIMRC Profile
+"Bruno Blais
+
+"Syntax Highlighting 
+filetype on
+"filetype plugin on
+syntax enable
+
+"Setting up tabulation
+"set expandtab
+set smarttab
+
+"Change tabulation width
+set shiftwidth=4
+set softtabstop=4
+
+" Enable mouse support in console
+set mouse=a
+
+" Line Numbers PWN!
+set number
+
+" Smart indent
+set ai!
+
+" Highlight things that we find with the search
+set hlsearch
+
+" When I close a tab, remove the buffer
+set nohidden
+
+"Font
+set guifont=Monospace\ 9

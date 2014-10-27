@@ -30,7 +30,6 @@ tminFFT=0.
 #======================
 #   MAIN
 #======================
-
 tFold= 0
 
 #Read the logs files
@@ -62,13 +61,11 @@ N= len(dy1[index]) # Number of points
 
 # First normalise the amplitude with respect to the number of points
 spectrum = abs(numpy.fft.fft(dy1[index])) / N
-
 f1 = numpy.arange(0.,Fs/2.-df,df)
 
 # Keep positive part of the FFT spectrum
 Nf = (N)/2
 spectrum1 = 2 * spectrum[0:len(f1)]
-
 
 if (tFold):
     tx2, dx2 = numpy.loadtxt(folder[1]+'/dragX', unpack=True)
@@ -77,7 +74,6 @@ if (tFold):
 
     # Take absolute value
     dx2= numpy.abs(dx2)
-
 
     # Manual FFT to get amplitude and frequencies right!
     Fs = 1. / (tx2[2]-tx2[1]) # Sampling frequency
@@ -93,7 +89,6 @@ if (tFold):
     Nf = (N)/2
     spectrum2 = 2 * spectrum[0:len(f2)]
 
-
 # Plotting stage
 axfft=plt.figure("FFT C_L")
 plt.ylabel(' FFT $C_L$ ')
@@ -102,18 +97,15 @@ plt.title('Frequency spectrum of $C_L$  ')
 plt.yscale('log')
 plt.xscale('log')
 
-
 if (tFold ==0):
     plt.plot(f1,spectrum1)
 if (tFold ==1):
     plt.plot(f1,spectrum1,f2,spectrum2)
 
-
 ax = plt.figure("Drag coefficient") #Create window
 plt.ylabel('$C_D$, $C_L$ ')
 plt.xlabel('time [s]')
 plt.title('Drag coefficients with time for 2D Kelvin-Helmholtz ')
-
 
 if (tFold ==0):
     plt.plot(tx1[skip:],2*dx1[skip:],'-', label='$C_D$')
@@ -123,7 +115,6 @@ if (tFold ==1):
     plt.plot(ty1[skip:],-2*dy1[skip:],'-', label=('$C_L$-'+sys.argv[1]))
     plt.plot(tx2[skip:],2*dx2[skip:],'-', label=('$C_D$-'+sys.argv[2]))
     plt.plot(ty2[skip:],-2*dy2[skip:],'-', label=('$C_L$-'+sys.argv[2]))
-
 
 plt.legend(loc=1)
 plt.show()

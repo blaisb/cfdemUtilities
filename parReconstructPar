@@ -1,0 +1,100 @@
+#!/bin/bash
+
+#TODO: add flag to trigger deletion of original processorX directories after successful reconstruction
+
+if [ -z "$1" ]; then 
+   echo ""
+   echo "  K. Wardle 6/22/09"
+   echo "  bash script to run reconstructPar in pseudo-parallel mode"
+   echo "  by breaking time directories into multiple ranges"
+   echo "" 
+   echo "  USAGE: $0 <NP> <outputfile>   [output file is optional] "
+   echo ""
+   exit
+fi
+
+appname="reconstructPar"
+appflag="-noZero"
+
+#set max jobs as value input for np
+njobs=$1
+#let njobs1=$njobs+1  
+echo "running $appname $appflag in pseudo-parallel mode on $njobs processors"
+
+#count the number of time directories
+nsteps=`ls -d processor0/[0-9]*/ | wc -l`
+echo "reconstructing $nsteps time directories"
+##nsteps=`ls processor0 | wc -l`
+#echo "nsteps= $nsteps"
+#let nsteps=$nsteps1-1
+
+nchunk=`echo $nsteps/$njobs+1 | bc`
+#echo "nchunk = $nchunk"
+
+#find max time
+tmin=`ls processor0 | sort -nr | tail -1`
+#echo "tmin = $tmin"
+tmax=`ls processor0 | sort -nr | head -1`
+#echo "tmax = $tmax"
+
+echo "making temp dir"
+tempdir="temp.parReconstructPar"
+mkdir $tempdir
+
+tstart=$tmin
+p=p
+
+for i in `seq $njobs`
+do
+  nn=`echo $i*$nchunk | bc`
+  tstop=`ls processor0 | sed -n $nn$p`
+  if [ $i == $njobs ] 
+	then
+	tstop=$tmax
+  fi
+  
+  echo "Starting Job $i - reconstructing time = $tstart through $tstop"
+  `$appname $appflag -time "$tstart:$tstop" > $tempdir/output-$tstop &`
+  
+  let nn=$nn+1
+  tstart=`ls processor0 | sed -n $nn$p`  
+done
+
+#sleep until jobs finish
+#if number of jobs > njobs, hold loop until job finishes
+nmore_old=`echo 0`
+until [ `ps -C $appname | wc -l` -eq 1 ]; 
+  do 
+    sleep 10
+##    n1=`ps -C $appname | wc -l`
+##    n2=`echo $n1-1 | bc`
+    nnow=`ls -d [0-9]*/ | wc -l` ##count time directories in case root dir, this will include 0
+    nmore=`echo $nsteps-$nnow+1 | bc` ##calculate number left to reconstruct and subtract 0 dir
+    if [ $nmore != $nmore_old ]
+      then
+      echo "$nmore directories remaining..."
+    fi
+    nmore_old=$nmore
+  done
+
+#combine and cleanup
+if [ -n "$2" ] 
+  then
+#check if output file already exists
+  if [ -e "$2" ] 
+  then
+    echo "output file $2 exists, moving to $2.bak"
+    mv $2 $2.bak
+  fi
+
+  echo "cleaning up temp files"
+  for i in `ls $tempdir`
+  do
+    cat $tempdir/$i >> $2
+  done
+fi
+
+rm -rf $tempdir
+
+echo "finished"
+
