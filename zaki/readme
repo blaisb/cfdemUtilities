@@ -1,0 +1,19 @@
+This folder contains the post-processing tool for the Richardson-Zaki sedimentation test case
+
+statsZaki.py :
+    - Calculates the statistics of an individual case in time such as average sedimentation velocity in many directions, etc.
+
+timeAvg.py : Averages the simulation in time to get a single result. Takes into argument a beggining and end timestep.
+
+plotSingleCaseZaki : Graphic for a single case, that is mean sedimentation velocity with time.
+
+plotTotalZaki : Graphic of time-averaged settling velocity as a function of volume fraction of particles
+
+
+-----
+How to postprocess a case :
+    - launch createStatsZaki.sh
+    - Look at each individual case using plotSingleZaki.py
+    - launch gatherStatsZaki.sh
+    - launch plotTotalZaki to see final results
+

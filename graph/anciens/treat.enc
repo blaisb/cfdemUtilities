@@ -1,0 +1,202 @@
+VERSION 9.03 (b)
+part: select_default
+part: modify_begin
+part: elt_representation 3D_feature_2D_full
+part: modify_end
+data: binary_files_are big_endian
+data: format case
+data: shift_time 1.000000 0.000000 0.000000
+data: replace /home/blais/resu/SOD/energie_dte-7/1e2/data/RESULTS.case
+view_transf: rotate -3.829193e+01 -7.867134e-01 0.000000e+00
+view_transf: action translate
+view_transf: translate -1.509421e-01 1.436427e+00 0.000000e+00
+variables: activate Pressure
+part: select_all
+query_ent_var: begin
+query_ent_var: description
+query_ent_var: query_type generated
+query_ent_var: part_id 1
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 Pressure
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+clip: select_default
+part: modify_begin
+clip: tool line
+clip: line 1 -5.000000e-01 5.000000e-02 5.000000e-02
+clip: line 2 5.000000e-01 5.000000e-02 5.000000e-02
+part: modify_end
+tools: line ON
+part: select_all
+clip: begin
+clip: tool line
+clip: pts_on_line 20
+clip: line 1 -6.282622e-01 4.999995e-02 4.999977e-02
+clip: line 2 6.282622e-01 4.999995e-02 4.999977e-02
+clip: end
+clip: create
+part: select_begin
+2
+part: select_end
+query_ent_var: begin
+query_ent_var: description
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 Pressure
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+0
+curve: select_end
+variables: activate density1
+part: select_begin
+2
+part: select_end
+query_ent_var: begin
+query_ent_var: description
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 density1
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+1
+curve: select_end
+variables: activate U1
+part: select_begin
+2
+part: select_end
+query_ent_var: begin
+query_ent_var: description
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 U1
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+2
+curve: select_end
+variables: activate BILAN_QDM
+part: select_begin
+2
+part: select_end
+query_ent_var: begin
+query_ent_var: description
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 BILAN_QDM
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+3
+curve: select_end
+curve: select_begin
+0
+curve: select_end
+curve: assign rescale Pressure vs. Distance for part 2
+plot: select_begin
+0
+plot: select_end
+plot: select_default
+curve: select_begin
+1
+curve: select_end
+curve: assign rescale density1 vs. Distance for part 2
+plot: select_begin
+1
+plot: select_end
+plot: select_default
+curve: select_begin
+2
+curve: select_end
+curve: assign rescale U1 vs. Distance for part 2
+plot: select_begin
+2
+plot: select_end
+plot: select_default
+curve: select_begin
+3
+curve: select_end
+curve: assign rescale BILAN_QDM vs. Distance for part 2
+plot: select_begin
+3
+plot: select_end
+view_transf: translate 1.204841e+00 -2.777092e-01 0.000000e+00
+variables: activate BILAN_M
+part: select_begin
+ 2
+part: select_end
+query_ent_var: begin
+query_ent_var: description 
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 BILAN_M
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+ 4
+curve: select_end
+variables: activate BILAN_H
+part: select_begin
+ 2
+part: select_end
+query_ent_var: begin
+query_ent_var: description 
+query_ent_var: query_type generated
+query_ent_var: part_id 2
+query_ent_var: constrain 1d_part
+query_ent_var: distance x_from_origin
+query_ent_var: variable_1 BILAN_H
+query_ent_var: multiple_segments_by accumulation
+query_ent_var: generate_over distance
+query_ent_var: variable_2 DISTANCE
+query_ent_var: end
+query_ent_var: query
+curve: select_begin
+ 5
+curve: select_end
+plot: select_default
+curve: select_begin
+ 4
+curve: select_end
+curve: assign rescale BILAN_M vs. Distance for part 2
+plot: select_begin
+ 4
+plot: select_end
+plot: select_default
+curve: select_begin
+ 5
+curve: select_end
+curve: assign rescale BILAN_H vs. Distance for part 2
+plot: select_begin
+ 5
+plot: select_end
+view_transf: translate -8.894799e-01 -2.815397e+00 0.000000e+00

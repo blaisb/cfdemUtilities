@@ -1,0 +1,6 @@
+File name without extention nor iteration value(to open example_1.txt, write example_ ) 
+particlesInfo_
+Number of radius (plans) 
+50
+Number of numerical integration per half-sphere
+20
