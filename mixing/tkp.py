@@ -1,4 +1,4 @@
-#This program is a simple calculator to obtain kp from a given power value
+#This program is a simple calculator to obtain kp from a given torque value
 
 # USAGE : python ./kp.py TorquePressure TorqueViscosity
 

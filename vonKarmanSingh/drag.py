@@ -18,14 +18,24 @@ import matplotlib.pyplot as plt
 import re 
 #----------------
 
+
 #TODO
 # - Make everything in a single loop instead
 
 #********************************
 #   OPTIONS AND USER PARAMETERS
 #********************************
-skip=50
+skip=100
 tminFFT=0.
+#Figure size
+plt.rcParams['figure.figsize'] = 10, 7
+
+font = {#'family' : 'normal',
+        'weight' : 'normal',
+        'size'   : 14}
+
+plt.rc('font', **font)
+
 
 #======================
 #   MAIN
@@ -91,16 +101,20 @@ if (tFold):
 
 # Plotting stage
 axfft=plt.figure("FFT C_L")
-plt.ylabel(' FFT $C_L$ ')
+axfftp = axfft.add_subplot(111) 
+plt.ylabel(' Amplitude ')
 plt.xlabel('Strouhal Number ($St$)')
 plt.title('Frequency spectrum of $C_L$  ')
 plt.yscale('log')
 plt.xscale('log')
 
 if (tFold ==0):
-    plt.plot(f1,spectrum1)
+    plt.plot(f1,spectrum1,linewidth=2.0)
 if (tFold ==1):
-    plt.plot(f1,spectrum1,f2,spectrum2)
+    plt.plot(f1,spectrum1,f2,spectrum2,linewidth=2.0)
+
+#axfftp.grid(b=True, which='minor', color='k', linestyle='--')
+axfftp.grid(b=True, which='major', color='k', linestyle='-') 
 
 ax = plt.figure("Drag coefficient") #Create window
 plt.ylabel('$C_D$, $C_L$ ')
@@ -108,13 +122,13 @@ plt.xlabel('time [s]')
 plt.title('Drag coefficients with time for 2D Kelvin-Helmholtz ')
 
 if (tFold ==0):
-    plt.plot(tx1[skip:],2*dx1[skip:],'-', label='$C_D$')
-    plt.plot(ty1[skip:],-2*dy1[skip:],'-', label='$C_L$')
+    plt.plot(tx1[skip:],2*dx1[skip:],'-', label='$C_D$',linewidth=2.0)
+    plt.plot(ty1[skip:],-2*dy1[skip:],'-', label='$C_L$',linewidth=2.0)
 if (tFold ==1):
-    plt.plot(tx1[skip:],2*dx1[skip:],'-', label=('$C_D$-'+sys.argv[1]))
-    plt.plot(ty1[skip:],-2*dy1[skip:],'-', label=('$C_L$-'+sys.argv[1]))
-    plt.plot(tx2[skip:],2*dx2[skip:],'-', label=('$C_D$-'+sys.argv[2]))
-    plt.plot(ty2[skip:],-2*dy2[skip:],'-', label=('$C_L$-'+sys.argv[2]))
+    plt.plot(tx1[skip:],2*dx1[skip:],'-', label=('$C_D$-'+sys.argv[1]),linewidth=2.0)
+    plt.plot(ty1[skip:],-2*dy1[skip:],'-', label=('$C_L$-'+sys.argv[1]),linewidth=2.0)
+    plt.plot(tx2[skip:],2*dx2[skip:],'-', label=('$C_D$-'+sys.argv[2]),linewidth=2.0)
+    plt.plot(ty2[skip:],-2*dy2[skip:],'-', label=('$C_L$-'+sys.argv[2]),linewidth=2.0)
 
 plt.legend(loc=1)
 plt.show()

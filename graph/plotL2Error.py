@@ -1,4 +1,4 @@
-# Last Modified: Mon 27 Oct 2014 02:46:01 PM CET
+# Last Modified: Wed 29 Oct 2014 05:09:54 PM CET
 # This program makes the log-log plot for L2 error and outputs the order of convergence (slope) as a printed output
 # Graphic is in better shape now
 
@@ -14,6 +14,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import LogLocator, FormatStrFormatter
 import pylab
+
+#Figure size
+plt.rcParams['figure.figsize'] = 10, 7
+
+font = {#'family' : 'normal',
+        'weight' : 'normal',
+        'size'   : 14}
+
+plt.rc('font', **font)
 
 #===================
 # MAIN PROGRAM
@@ -37,7 +46,7 @@ ax.set_yscale('log')
 ax.set_xscale('log')
 
 # Labeling
-plt.ylabel('L$^2$ Error')
+plt.ylabel('$\Vert e \Vert$')
 plt.xlabel('$\Delta x$')
 
 # Regression
@@ -48,10 +57,12 @@ if (b<0):
 else :
     ax.text(0.02,0.01, r'$\log(L^2)=%2.2f  \log(\Delta x) + %2.2f$' %(a,b), fontsize=15)
 
-ax.grid(b=True, which='minor', color='r', linestyle='--')
-ax.grid(b=True, which='major', color='k', linestyle='-') 
-ax.plot(dx,numpy.exp(b) * dx**a,label="Linear regression")
+ax.grid(b=True, which='minor', color='b', linestyle='--')
+ax.grid(b=True, which='major', color='b', linestyle='-') 
+ax.plot(dx,l2E,'ko',label='$\Vert e_{\mathbf{u}}\Vert_{2}$')
+ax.plot(dx,numpy.exp(b)*(dx)**a,'-k',label='$\log(\Vert e_{\mathbf{u}}\Vert_{2})=%3.2f  \log(\Delta x) %3.2f$' %(a,b))
 
+ax.legend(loc=2)
 print 'Slope is = \t', a
 
 plt.savefig("./L2Error.png")
