@@ -1,0 +1,5 @@
+for i in queue*
+do
+    bsend.sh $i
+done
+

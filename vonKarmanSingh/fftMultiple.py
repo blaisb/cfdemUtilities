@@ -27,20 +27,17 @@ import re
 #********************************
 skip=100
 pdf=1
-tminFFT=1.
+tminFFT=50.
+tminFFT2=100.
 #Figure size
 plt.rcParams['figure.figsize'] = 10, 7
 
-params = {'backend': 'ps',
-             'axes.labelsize': 24,
-             'text.fontsize': 16,
-             'legend.fontsize': 18,
-             'xtick.labelsize': 16,
-             'ytick.labelsize': 16,
-             'text.usetex': True,
-             }
-   
-plt.rcParams.update(params)
+font = {#'family' : 'normal',
+        'weight' : 'normal',
+        'size'   : 14}
+
+plt.rc('font', **font)
+
 
 #======================
 #   MAIN
@@ -92,23 +89,23 @@ if (tFold):
     ty2, dy2 = numpy.loadtxt(folder[1]+'/dragY', unpack=True)
     dx2=dx2*2
     dy2=dy2*2
-    index = numpy.where(ty2>tminFFT)
+    index2 = numpy.where(ty2>tminFFT2)
 
     # Take absolute value
     dx2= numpy.abs(dx2)
 
     # Manual FFT to get amplitude and frequencies right!
     Fs = 1. / (tx2[2]-tx2[1]) # Sampling frequency
-    df = 1. /  ty2[-1]
-    N= len(dy2[index]) # Number of points
+    df = 1. /  ty2[-1] * 2
+    N2= len(dy2[index2]) # Number of points
 
     # First normalise the amplitude with respect to the number of points
-    spectrum = abs(numpy.fft.fft(dy2[index])) / N
+    spectrum = abs(numpy.fft.fft(dy2[index2])) / N2
 
     f2 = numpy.arange(0.,Fs/2.-df,df)
 
     # Keep positive part of the FFT spectrum
-    Nf = (N)/2
+    Nf2 = (N2)/2
     spectrum2 = 2 * spectrum[0:len(f2)]
 
 # Plotting stage
@@ -123,10 +120,12 @@ plt.xscale('log')
 if (tFold ==0):
     plt.plot(f1,spectrum1,linewidth=2.0)
 if (tFold ==1):
-    plt.plot(f1,spectrum1,f2,spectrum2,'k',linewidth=2.0)
+    plt.plot(f1,spectrum1,'--k',label='Moving cylinder',linewidth=2)
+    plt.plot(f2,spectrum2,'-k',linewidth=1.5, label='Static cylinder')
 
 #axfftp.grid(b=True, which='minor', color='k', linestyle='--')
 axfftp.grid(b=True, which='major', color='k', linestyle='--') 
+plt.legend(loc=1)
 if (pdf): plt.savefig("./fftOnCylinder.pdf")
 
 
@@ -138,8 +137,8 @@ plt.xlabel('time [s]')
 #plt.title('Drag coefficients with time for 2D Kelvin-Helmholtz ')
 
 if (tFold ==0):
-    plt.plot(tx1[skip:],dx1[skip:],'-', label='$C_D$',linewidth=2.0,color='grey')
-plt.plot(ty1[skip:],-dy1[skip:],'-', label='$C_L$',linewidth=2.0,color='black')
+    plt.plot(tx1[skip:],dx1[skip:],'b-', label='$C_D$',linewidth=2.0)
+plt.plot(ty1[skip:],-dy1[skip:],'g-', label='$C_L$',linewidth=2.0)
 if (tFold ==1):
     plt.plot(tx1[skip:],dx1[skip:],'-', label=('$C_D$-'+sys.argv[1]),linewidth=2.0)
     plt.plot(ty1[skip:],-dy1[skip:],'-', label=('$C_L$-'+sys.argv[1]),linewidth=2.0)
@@ -154,5 +153,4 @@ print "Amplitude CD:\t", (numpy.max(dx1[index])-numpy.min(dx1[index]))/2
 print "Amplitude CL:\t", (numpy.max(dy1[index])-numpy.min(dy1[index]))/2
 print "Average CL:\t", numpy.average(dy1[index])
 axp.grid(b=True, which='major', color='k', linestyle='--') 
-if (pdf): plt.savefig("./forceOnCylinder.pdf")
 plt.show()
