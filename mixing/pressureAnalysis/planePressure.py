@@ -67,6 +67,13 @@ for i in timeFolder:
 
 print "Post-processing over"
 
+# Save results
+print "Saving results"
+
+N = [numpy.asarray(t).T,numpy.asarray(pAvg).T]
+numpy.savetxt("pressureBottom", numpy.asarray(N).T, fmt='%.8e', delimiter=' ', newline='\n', header='time\t Pressure')
+
+
 #Plot results
 plt.plot(t,pAvg)
 
