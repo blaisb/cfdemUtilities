@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 #   OPTIONS AND USER PARAMETERS
 #********************************
 rho=1400
+plot=False
 
 
 #======================
@@ -72,8 +73,9 @@ numpy.savetxt("pressureBottom", numpy.asarray(N).T, fmt='%.8e', delimiter=' ', n
 
 
 #Plot results
-plt.plot(t,pAvg)
+if (plot):
+    plt.plot(t,pAvg)
 
-plt.ylabel('Bottom pressure')
-plt.xlabel('Time (s)')
-plt.show()
+    plt.ylabel('Bottom pressure')
+    plt.xlabel('Time (s)')
+    plt.show()
