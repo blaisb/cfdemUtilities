@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 #********************************
 rho=1400
 
+
 #======================
 #   MAIN
 #======================
@@ -37,10 +38,6 @@ if (len(sys.argv)<2) :
 
 folder=sys.argv[1]
 #os.chdir(sys.argv[1]) #go to directory
-
-# Output file for the mixing layer
-outname='pressureAnalysis'
-outPressure=open(outname,'w')
 
 # Acquire list of time step
 timeFolder=os.listdir(folder)
@@ -71,7 +68,7 @@ print "Post-processing over"
 print "Saving results"
 
 N = [numpy.asarray(t).T,numpy.asarray(pAvg).T]
-numpy.savetxt("pressureBottom", numpy.asarray(N).T, fmt='%.8e', delimiter=' ', newline='\n', header='time\t Pressure')
+numpy.savetxt("pressureBottom", numpy.asarray(N).T, fmt='%.8e', delimiter=' ', newline='\n')
 
 
 #Plot results
