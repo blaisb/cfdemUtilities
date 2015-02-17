@@ -27,8 +27,8 @@ import re
 #********************************
 skip=100
 pdf=1
-tminFFT=50.
-tminFFT2=100.
+tminFFT=175.
+tminFFT2=150.
 #Figure size
 plt.rcParams['figure.figsize'] = 10, 7
 
@@ -67,7 +67,7 @@ dy1=dy1*2
 # Take absolute value
 dx1= numpy.abs(dx1)
 
-index = numpy.where(ty1>tminFFT)
+index = numpy.where(ty1>tminFFT )
 
 # Manual FFT to get amplitude and frequencies right!
 Fs = 1. / (tx1[2]-tx1[1]) # Sampling frequency
@@ -96,7 +96,7 @@ if (tFold):
 
     # Manual FFT to get amplitude and frequencies right!
     Fs = 1. / (tx2[2]-tx2[1]) # Sampling frequency
-    df = 1. /  ty2[-1] * 2
+    df = 1. /  (ty2[-1] -tminFFT2)
     N2= len(dy2[index2]) # Number of points
 
     # First normalise the amplitude with respect to the number of points
@@ -131,6 +131,7 @@ if (pdf): plt.savefig("./fftOnCylinder.pdf")
 
 ax = plt.figure("Drag coefficient") #Create window
 axp=ax.add_subplot(111)
+
 plt.ylabel('$C_D$, $C_L$ ')
 plt.xlabel('time [s]')
 
@@ -145,6 +146,7 @@ if (tFold ==1):
     plt.plot(tx2[skip:],dx2[skip:],'-', label=('$C_D$-'+sys.argv[2]),linewidth=2.0)
     plt.plot(ty2[skip:],-dy2[skip:],'-', label=('$C_L$-'+sys.argv[2]),linewidth=2.0)
 
+
 plt.legend(loc=3)
 
 print "Averaged CD:\t", numpy.average(dx1[index])
@@ -153,4 +155,5 @@ print "Amplitude CD:\t", (numpy.max(dx1[index])-numpy.min(dx1[index]))/2
 print "Amplitude CL:\t", (numpy.max(dy1[index])-numpy.min(dy1[index]))/2
 print "Average CL:\t", numpy.average(dy1[index])
 axp.grid(b=True, which='major', color='k', linestyle='--') 
+
 plt.show()

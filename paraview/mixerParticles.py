@@ -3,8 +3,8 @@ import glob
 import re
 
 #liste = glob.glob('/home/bruno/CFDEM/bruno-PUBLIC-2.2.1/runv2-6/particle_only/loadingSquare/post/cylinder*.vtk')
-liste = glob.glob('./post/mixer_*.vtk')
-listeImpl = glob.glob('./post/impeller_*.stl')
+liste = glob.glob('./post/VTK/mixer_*.vtk')
+listeImpl = glob.glob('./post/VTK/impeller_*.stl')
 listeTank=glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/tank.stl')
 #liste.sort()
 

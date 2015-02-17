@@ -27,7 +27,7 @@ import re
 #********************************
 skip=100
 pdf=1
-tminFFT=1.
+tminFFT=125.
 #Figure size
 plt.rcParams['figure.figsize'] = 10, 7
 
@@ -154,5 +154,9 @@ print "Amplitude CD:\t", (numpy.max(dx1[index])-numpy.min(dx1[index]))/2
 print "Amplitude CL:\t", (numpy.max(dy1[index])-numpy.min(dy1[index]))/2
 print "Average CL:\t", numpy.average(dy1[index])
 axp.grid(b=True, which='major', color='k', linestyle='--') 
+plt.axis((0,200,-1,1.5))
+
 if (pdf): plt.savefig("./forceOnCylinder.pdf")
+
+
 plt.show()
