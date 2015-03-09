@@ -25,10 +25,9 @@ plot = False
 
 # User imput parameters
 # Available styles : random, rotation
-vStyle="rotation" 
-
-vScaleX=0.02
-vScaleY=0.02
+vStyle="rotationRandom" 
+vScaleX=0.01
+vScaleY=0.01
 
 
 
@@ -38,7 +37,7 @@ def reDev(x):
     return y
 
 
-nx, ny = (3, 3)
+nx, ny = (101, 101)
 x = numpy.linspace(0.001, 1, nx)
 y = numpy.linspace(0.001, 1, ny)
 xv, yv = numpy.meshgrid(x, y)
@@ -66,6 +65,10 @@ for t in range(0,1100):
         if (vStyle=="rotation"):
             u = -vScaleX * yvl
             v =  vScaleX * xvl
+        elif (vStyle=="rotationRandom"):
+            temp = vScaleX *10* (numpy.random.random_sample([ny,nx])-0.5) 
+            u = -vScaleX * yvl - temp * yvl 
+            v =  vScaleX * xvl + temp * xvl
         elif (vStyle=="random"):
             u = vScaleX * (numpy.random.random_sample([ny,nx])-0.5) 
             v = vScaleY * (numpy.random.random_sample([ny,nx])-0.5)

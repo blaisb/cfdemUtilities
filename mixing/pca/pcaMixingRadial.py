@@ -26,12 +26,9 @@ write = False
 
 # User imput parameters
 # Available styles : random, rotation
-vStyle="rotation" 
-
+vStyle="randomRotation" 
 vR=0.0
-vTheta=0.02
-
-
+vTheta=0.010
 
 # Calculation of reduced deviation
 def reDev(x):
@@ -97,6 +94,9 @@ for t in range(0,1100):
         if (vStyle=="rotation"):
             ur = 0
             ut = vTheta
+        if (vStyle=="randomRotation"):
+            ur = 0
+            ut = vTheta + 10*vTheta*(numpy.random.random_sample([ny,nx])-0.5) 
         elif (vStyle=="uniaxial"):
             ur = 0
             ut = 0
@@ -115,7 +115,7 @@ for t in range(0,1100):
     #Construct correlation matrix
     C[0,0]=numpy.mean(reDev(rvl)*reDev(rv))
     C[1,0]=numpy.mean(reDev(tvl)*reDev(rv))
-    C[0,1]=numpy.mean(reDev(tv)*reDev(tvl))
+    C[0,1]=numpy.mean(reDev(rvl)*reDev(tv))
     C[1,1]=numpy.mean(reDev(tvl)*reDev(tv))
 
     M = C*C.transpose()
@@ -125,8 +125,5 @@ for t in range(0,1100):
     if (write): writeFile(t,xvl,yvl,zvl)
     lamL.extend([lam])
 
-for i in lamL:
-    print numpy.sort(i), " \n" 
-     
 plt.show()
 
