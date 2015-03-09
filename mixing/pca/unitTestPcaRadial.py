@@ -1,9 +1,9 @@
 #--------------------------------------------------------------------------------------------------
 #
 #   Description :   Sample program to generate random trajectories and to analyse them using PCA
-#                   This is a unit test function for the FSAPLF CODE 
+#                   Prototype for the radial coordinates
 #
-#   Usage : python unitTestPca
+#   Usage : python pcaMixingRadial
 #
 #
 #   Author : Bruno Blais
@@ -20,9 +20,17 @@ import time
 import matplotlib.pyplot as plt
 import pylab
 from mpl_toolkits.mplot3d import Axes3D
-plot = True
-vScaleX=0.15
-vScaleY=0.15
+plot = False
+write = True
+
+
+# User imput parameters
+# Available styles : random, rotation
+vStyle="rotation" 
+
+vR=0.0
+vTheta=0.002
+
 
 
 # Calculation of reduced deviation
@@ -30,6 +38,7 @@ def reDev(x):
     y = 1./numpy.std(x,ddof=1) * (x-numpy.mean(x))
     return y
 
+# Write LAMMPS format output file
 def writeFile(i,x,y,z):
     if (i<10):
         outname=sys.argv[1]+"_00"+str(i)+".dump"
@@ -56,64 +65,76 @@ def writeFile(i,x,y,z):
     for i in range(0,numpy.size(x)):
         outfile.write("%i 1 1 %f %f %f 1 1 1 1 1 1 1\n" %(i,x2[i],y2[i],z2[i]))
 
-nx, ny = (20, 20)
+
+
+nx, ny = (13, 13)
 x = numpy.linspace(0.001, 1, nx)
 y = numpy.linspace(0.001, 1, ny)
 xv, yv = numpy.meshgrid(x, y)
+rv=(xv*xv+yv*yv)**(1./2.)
+tv=numpy.arctan2(yv,xv)
 
 
-#fig=plt.figure("Trajectories")
+# Initialize figure for trajectories
+#-------------------------------------
+fig=plt.figure("Trajectories")
 lFig=plt.figure("lambda")
 lAx=lFig.add_subplot(111)
 lAx.set_ylabel("Mixing index")
 lAx.set_xlabel("Sampling time")
+lAx.set_ylim(ymin=0,ymax=1.1)
+ax = Axes3D(fig)
+#-------------------------------------
 
-#ax = Axes3D(fig)
-xvl=xv
-yvl=yv
-zvl=xv
-zv= xv
-lamL=[]
+rvl=rv
+tvl=tv
+zv =numpy.random.random_sample([ny,nx])
+zvl=zv
 C=numpy.zeros([3,3])
+lamL=[]
 
-for t in range(0,1000):
+for t in range(0,300):
     
-    # Uniaxial flow ---> (u,v,w) = (0, 0,1)
-    xvl = xvl 
-    yvl = yvl
-    zvl = zvl
-
-    if (t>100 and t<800):
-        u = vScaleX * (numpy.random.random_sample([ny,nx])-0.5) 
-        v = vScaleY * (numpy.random.random_sample([ny,nx])-0.5)
-        xvl = xvl + u
-        yvl = yvl + v
-        zvl = zvl+ xvl/xvl*0.1 * (numpy.random.random_sample([ny,nx])-0.5)
-
-
-    #ax.scatter(xvl,yvl,zvl,'o')
+    if (t>100 and t<200):
+        if (vStyle=="rotation"):
+            ur = 0
+            ut = vTheta
+        elif (vStyle=="uniaxial"):
+            ur = 0
+            ut = 0
+        elif (vStyle=="random"):
+            print "Not implemented yet"
+        else:
+            print "Invalid velocity profile"
+        rvl = rvl + ur
+        tvl = tvl + ut
+        zvl = numpy.random.random_sample([ny,nx])  #rvl/numpy.max(rvl,1e-6)*t
+    xvl = rvl * numpy.cos(tvl)
+    yvl = rvl * numpy.sin(tvl)
+    if (t%5==0): 
+        ax.scatter(xvl[::nx+1],yvl[::nx+1],zvl[::nx+1],'o')
 
     #Construct correlation matrix
-    C[0,0]=numpy.mean(reDev(xvl)*reDev(xv) )
-    C[1,0]=numpy.mean(reDev(yvl)*reDev(xv))
-    C[2,0]=numpy.mean(reDev(zvl)*reDev(xv))
-    C[0,1]=numpy.mean(reDev(xvl)*reDev(yv))
-    C[1,1]=numpy.mean(reDev(yvl)*reDev(yv))
-    C[2,1]=numpy.mean(reDev(zvl)*reDev(yv))
-    C[0,2]=numpy.mean(reDev(xvl)*reDev(zv))
-    C[1,2]=numpy.mean(reDev(yvl)*reDev(zv))
+    C[0,0]=numpy.mean(reDev(rvl)*reDev(rv))
+    C[1,0]=numpy.mean(reDev(tvl)*reDev(rv))
+    C[2,0]=numpy.mean(reDev(zvl)*reDev(rv))
+    C[0,1]=numpy.mean(reDev(rvl)*reDev(tv))
+    C[1,1]=numpy.mean(reDev(tvl)*reDev(tv))
+    C[2,1]=numpy.mean(reDev(zvl)*reDev(tv))
+    C[0,2]=numpy.mean(reDev(rvl)*reDev(zv))
+    C[1,2]=numpy.mean(reDev(tvl)*reDev(zv))
     C[2,2]=numpy.mean(reDev(zvl)*reDev(zv))
 
-
-
-    M = numpy.dot(C,C.transpose())
+    M = C*C.transpose()
     lam,R=numpy.linalg.eig(M)
-
-    lAx.scatter(t,numpy.sqrt(numpy.max(lam)/3.))
-    writeFile(t,xvl,yvl,zvl)
+    print lam
+    if (t==0): lam0=numpy.max(lam)
+    lAx.scatter(t,numpy.sqrt(numpy.max(lam)/lam0))
+    if (write): writeFile(t,xvl,yvl,zvl)
     lamL.extend([lam])
 
 for i in lamL:
     print numpy.sort(i), " \n" 
+     
 plt.show()
 

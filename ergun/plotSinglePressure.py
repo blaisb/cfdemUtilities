@@ -64,7 +64,7 @@ for i in range(1,len(sys.argv)):
     pMat = numpy.loadtxt(sys.argv[i], unpack=True,comments="#")
     t=pMat[0,:]
     dP=(pMat[1,:]-pMat[-1,:]) * rhoG
-    plt.plot(t,dP,label=sys.argv[i])
+    plt.plot(t[::9],dP[::9],label=sys.argv[i])
 
 
 
@@ -73,7 +73,7 @@ dpUmf= numpy.ones(len(t)) * L * (
               +1.75*((1-epsilon)/epsilon**3)*((rhoG*Umf**2)/(phip*dp))
         );
 
-plt.plot(t,dpUmf,'k',label="Ergun correlation when particles are lifted")
+plt.plot(t[::9],dpUmf[::9],'k',label="Ergun correlation when particles are lifted")
 plt.ylim([-10,150])
 
 

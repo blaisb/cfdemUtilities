@@ -27,7 +27,7 @@ import re
 #********************************
 skip=100
 pdf=1
-tminFFT=175.
+tminFFT=180.
 #Figure size
 plt.rcParams['figure.figsize'] = 10, 7
 
