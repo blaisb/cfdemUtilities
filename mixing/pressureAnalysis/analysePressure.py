@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 #   OPTIONS AND USER PARAMETERS
 #********************************
 plot=False
-
+samplePoints=10
 
 #======================
 #   MAIN
@@ -56,10 +56,13 @@ for i in speedFolder:
     print "Opening ", i
     t,p = numpy.loadtxt(folder+"/"+i, unpack=True,comments="#")
     tempString= i.split("_")
-    N.append(float(tempString[-1]))
+    if(float(tempString[-2])>1000):
+        N.append(float(tempString[-1]))
+    else:
+        N.append(float(tempString[-2]))
     sortIndex=numpy.argsort(t)
     pS=p[sortIndex]
-    pAvg.append(numpy.average(pS[-10:-1]))
+    pAvg.append(numpy.average(pS[-samplePoints:-1]))
 
 print "Post-processing over"
 
