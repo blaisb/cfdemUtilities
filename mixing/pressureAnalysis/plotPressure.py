@@ -27,7 +27,7 @@ import pylab
 #=====================
 # User parameters
 #=====================
-ptSims=[-3]
+ptSims=[-6]
 ptExp=[-10,-3]
 datN={}
 datP={}

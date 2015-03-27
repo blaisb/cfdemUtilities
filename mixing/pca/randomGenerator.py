@@ -1,9 +1,9 @@
 #--------------------------------------------------------------------------------------------------
 #
-#   Description :   Sample program to generate random trajectories and to analyse them using PCA
-#                   Prototype for the radial coordinates
+#   Description :   
+#                   
 #
-#   Usage : python pcaMixingRadial
+#   Usage : python 
 #
 #
 #   Author : Bruno Blais

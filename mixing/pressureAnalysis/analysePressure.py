@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 #   OPTIONS AND USER PARAMETERS
 #********************************
 plot=False
-samplePoints=10
+samplePoints=50
 
 #======================
 #   MAIN
