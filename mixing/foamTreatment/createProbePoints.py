@@ -24,9 +24,9 @@ import numpy
 R=0.180
 H=0.36
 
-nR=49
-nZ=120
-nT=20
+nR=69
+nZ=150
+nT=30
 
 #********************************
 #   FUNCTIONS
@@ -39,7 +39,7 @@ def writeFile(name,x,y,z):
     #Write stupid header
     outfile.write("FoamFile { version     2.0; format      ascii; class       dictionary; object      probesDict;}\n\n")
 
-    outfile.write("fields ( U );\n\n ")
+    outfile.write("fields ( U\n voidfraction \n p \n Us );\n\n ")
     outfile.write("probeLocations (\n")
     for i in range(0,len(x)):
         outfile.write("(%f %f %f)\n" %(x[i],y[i],z[i]))
@@ -69,6 +69,6 @@ for i in Z:
 
 writeFile(outputFile,x,y,z)
 os.chdir(originalPath)
-print "Post-processing over"
+print "File generation over"
 
 

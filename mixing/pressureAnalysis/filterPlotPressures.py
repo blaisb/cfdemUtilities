@@ -37,7 +37,7 @@ filterOrder=3
 
 
 # Figures
-plt.rcParams['figure.figsize'] = 14, 7
+plt.rcParams['figure.figsize'] = 14, 9
 params = {'backend': 'ps',
              'axes.labelsize': 24,
              'text.fontsize': 16,
@@ -114,7 +114,7 @@ for i in speedFolder:
 box = axp.get_position()
 axp.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 plt.legend(loc='center left', bbox_to_anchor=(1., 0.5))
-plt.ylim([0,500])
+plt.ylim([0,550])
 #plt.xlim([0,200])
 axp.grid(b=True, which='major', color='k', linestyle='--') 
 if (pdf): plt.savefig("./filterPressure.pdf")

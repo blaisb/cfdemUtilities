@@ -29,10 +29,11 @@ tol=1e-4
 #   FIGURE OPTIONS
 #===============================
 #Figure size
-plt.rcParams['figure.figsize'] = 15, 7
+plt.rcParams['figure.figsize'] = 17, 8
 
 params = {'backend': 'ps',
              'axes.labelsize': 24,
+             'axes.titlesize': 24,
              'text.fontsize': 16,
              'legend.fontsize': 18,
              'xtick.labelsize': 16,
@@ -47,7 +48,8 @@ plt.rcParams.update(params)
 #   FUNCTION
 #================================
 
-def getScalarFromLine(l):
+
+def getCoordFromLine(l):
     l_str = l.split(" ")
     a = [x for x in l_str if x != ""]
     y=[]
@@ -55,7 +57,17 @@ def getScalarFromLine(l):
         if (i>=2):
             y.append(float(val))
     return numpy.array(y)
-        
+
+def getScalarFromLine(l):
+    l_str = l.split(" ")
+    a = [x for x in l_str if x != ""]
+    y=[]
+    for i,val in enumerate(a):
+        if (i>=1):
+            y.append(float(val))
+    return numpy.array(y)
+
+
 def getVectorFromLine(l):
     l=l.replace(")"," ")
     l=l.replace("("," ")
@@ -87,11 +99,11 @@ infile = open(fname,'r')
 
 #Get the first three lines to get the x y z positions
 l=infile.readline()
-x=getScalarFromLine(l)
+x=getCoordFromLine(l)
 l=infile.readline()
-y=getScalarFromLine(l)
+y=getCoordFromLine(l)
 l=infile.readline()
-z=getScalarFromLine(l)
+z=getCoordFromLine(l)
 
 #Transform the x y z positions to r t z
 r = numpy.sqrt(x*x+y*y)
@@ -170,20 +182,87 @@ if (mode=="velocity"):
         count+=1
         if (i ==(len(z)-1)): acc[k,j]=temp/count
 
+# Make the graph of the three coordinates:
+
+    # Radial graph
     plt.figure()
-    plt.subplots_adjust(left=0.02, bottom=0.06, right=0.95, top=0.94, wspace=0.15)
+    plt.subplots_adjust(left=0.06, bottom=0.06, right=0.95, top=0.94, wspace=0.35)
     plt.subplot(1,3,1) 
     plt.imshow(acc[:,:,0],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+    plt.xlabel("r [m]")
+    plt.ylabel("z [m]")
     plt.title("Radial velocity")
     plt.colorbar()
+
+
+    # Azimuthal graph
     plt.subplot(1,3,2) 
     plt.imshow(acc[:,:,1],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
-    plt.title("Azimuthal velocity")
+    plt.xlabel("r [m]")
+    plt.ylabel("z [m]")
+    plt.title('Azimuthal velocity' )
     plt.colorbar()
+
+    # Axial graph
     plt.subplot(1,3,3)
     plt.title("Axial velocity")
+    plt.xlabel("r [m]")
+    plt.ylabel("z [m]")
     plt.imshow(acc[:,:,2],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+    plt.colorbar()
+    
+    # Time to display some stuff
+    plt.show()
    
+if (mode=="scalar"):
+    #Acquire the U V and W vector associated with each position
+    l=infile.readline()
+    s=getScalarFromLine(l)
+
+    #clean the scalar
+    for i in range(1,len(s)):
+        if (abs(s[i])>1e5): s[i]=s[i-1]
+
+    #Averaging procedure
+    acc=numpy.zeros([nz,nr])
+    j=0
+    k=0
+    count=0
+    pR=r[0]
+    pZ=z[0]
+    temp=0
+    for i in range(0,len(z)):
+        if (abs(r[i]-pR)>tol):
+            count=max(count,1)
+            acc[k,j]=temp/count
+            j+=1
+            count=0
+            pR=r[i]
+            temp=0.
+
+        if (abs(z[i]-pZ)>tol):
+#            acc[j,k]=temp/count
+            pZ=z[i]
+            j=0
+            k+=1
+
+        temp+=s[i]
+        count+=1
+        if (i ==(len(z)-1)): acc[k,j]=temp/count
+
+    plt.figure(figsize=(6,8))
+    plt.subplots_adjust(left=0.02, bottom=0.08, right=0.95, top=0.94, wspace=0.15)
+    plt.subplot(1,1,1)
+    plt.xlabel("r [m]")
+    plt.ylabel("z [m]")
+    
+    plt.imshow(acc[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+    if (len(sys.argv)>3):
+        plt.title("%s" %(sys.argv[3]))
+    else:
+        plt.title("%s" %(sys.argv[1]))
     plt.colorbar()
     plt.show()
-    
+   
+
+

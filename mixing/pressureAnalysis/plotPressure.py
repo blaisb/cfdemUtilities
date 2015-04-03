@@ -27,13 +27,13 @@ import pylab
 #=====================
 # User parameters
 #=====================
-ptSims=[-6]
+ptSims=[-7]
 ptExp=[-10,-3]
 datN={}
 datP={}
 data={}
 datb={}
-confFactor=1.5
+confFactor=2.35
 
 # Figures
 plt.rcParams['figure.figsize'] = 10, 7
@@ -85,7 +85,7 @@ for i,arg in enumerate(sys.argv):
             a,b = numpy.polyfit(Nss[ptSims[0]:],ps[ptSims[0]:],1)
             print a, b
             plt.plot(Ns,ps,'b-o',label="Simulations")
-            Nt=numpy.insert(Ns,1,0.)
+            Nt=numpy.insert(Ns,0,0.)
 
             plt.plot(Nt,a*Nt*Nt+b,'b--',linewidth=2.0)
         datN[arg]=Ns
@@ -105,7 +105,6 @@ plt.show()
 fig = plt.figure()
 ax = fig.add_subplot(111) 
 for i,arg in enumerate(sys.argv):
-    print i, arg
     if (i>=1):
         rawfraction=[]
         fraction=[]
@@ -117,13 +116,24 @@ for i,arg in enumerate(sys.argv):
             fraction[k] = (val-rawfraction[0])/delta
         
         if (i==1): 
-            ax.errorbar(datN[arg],fraction,yerr=confFactor*wStd*fraction,fmt='g-s',label="Experimental Data",linewidth=1.5)
+            error=confFactor*wStd*fraction
+            stdmin=[]
+            stdmax=[]
+            for m,n in enumerate(fraction):
+                stdmin.append(min(error[m],n))
+                stdmax.append(min(error[m],1.-n))
+            #for m,n in enumerate(fraction):
+                #if ((n - error[m])<0.) : stdmin[m]=n
+                #if ((n + error[m])>1.) : 
+                    #stdmax[m]=1.-n
+                    #stdmin[m]=error[m]
+            ax.errorbar(datN[arg],fraction,yerr=[stdmin,stdmax],fmt='g-s',label="Experimental Data",linewidth=1.5)
         else:  ax.plot(datN[arg],fraction,'b--o',label="Simulations",linewidth=2.0)
 
 
 plt.ylabel('Fraction of suspended solid')
 plt.xlabel('Speed N[RPM]')
 plt.legend(loc=4)
-plt.ylim([-0.1,1.1])
+plt.ylim([-0.05,1.05])
 plt.show()
 
