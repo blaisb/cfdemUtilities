@@ -94,7 +94,7 @@ plt.xlabel('Time (s)')
 #plt.xscale('log')
 
 # Loop through all times
-for i in speedFolder:
+for k,i in enumerate(speedFolder):
 
     print "Opening ", i
     t,p = numpy.loadtxt(folder+"/"+i, unpack=True,comments="#")
@@ -106,15 +106,21 @@ for i in speedFolder:
     pS=p[sortIndex]
     pF=butter_lowpass_filter(pS,cutoff,fs,order=filterOrder)
     if (plotRaw): axp.plot(t, pS,'ko', label='Brute signal - ' +N+ ' RPM'+i,mfc='none')
-    if (float(N)<300): 
-        axp.plot(t, pF,'--', label=N + ' RPM',linewidth=3.0)
+    
+    if (float(N)>510): 
+    axp.plot(t, pF,'--', label=N + ' RPM',linewidth=3.0)#,color=(0,(k-12)/6.,0,1))
+    elif (float(N)<360):
+        axp.plot(t[::6], pF[::6],'^',markeredgecolor='none', label=N + ' RPM',linewidth=3.0)
+    
     else:
         axp.plot(t, pF, label=N + ' RPM',linewidth=3.0)
+    #col=k/float(len(speedFolder))
+    #axp.plot(t,pF,label=N+ ' RPM', linewidth=3.0, color=(col,0,0, 1))
 
 box = axp.get_position()
 axp.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 plt.legend(loc='center left', bbox_to_anchor=(1., 0.5))
-plt.ylim([0,550])
+plt.ylim([-10,550])
 #plt.xlim([0,200])
 axp.grid(b=True, which='major', color='k', linestyle='--') 
 if (pdf): plt.savefig("./filterPressure.pdf")

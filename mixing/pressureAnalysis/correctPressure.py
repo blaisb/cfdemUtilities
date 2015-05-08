@@ -38,11 +38,26 @@ if (len(sys.argv)<2) :
 fileId=sys.argv[1]
 
 #425 RPM
-beg=50. 
-end=80.
-gap=28.
-
-
+if (sys.argv[1][-3:]=="425"):
+    print "Case of 425RPM"
+    beg=50. 
+    end=100.
+    gap=25.
+elif (sys.argv[1][-3:]=="350"):
+    print "Case of 350RPM"
+    beg=50
+    end=120
+    gap=-10
+elif (sys.argv[1][-3:]=="575"):
+    print "Case of 575RPM"
+    beg=20
+    end=50
+    gap=7
+elif (sys.argv[1][-3:]=="600"):
+    print "Case of 575RPM"
+    beg=20
+    end=50
+    gap=-8
 
 print "Opening ", fileId
 t,p = numpy.loadtxt(fileId, unpack=True,comments="#")
@@ -53,7 +68,7 @@ pS=p[sortIndex]
 print "Correcting"
 
 for i,j in enumerate(pS):
-    if (tS[i]>60.):
+    if (tS[i]>beg):
         pS[i]=pS[i] + min(1.,(tS[i]-beg)/(end-beg))*gap
 
 

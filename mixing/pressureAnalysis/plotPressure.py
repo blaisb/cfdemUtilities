@@ -27,6 +27,8 @@ import pylab
 #=====================
 # User parameters
 #=====================
+pdf=True
+
 ptSims=[-7]
 ptExp=[-10,-3]
 datN={}
@@ -99,6 +101,7 @@ for i,arg in enumerate(sys.argv):
 plt.ylabel('Pressure at the bottom of the tank [Pa]')
 plt.xlabel('Speed N[RPM]')
 plt.legend(loc=4)
+if (pdf): plt.savefig("./pressure_vs_N.pdf")
 plt.show()
 
 
@@ -135,5 +138,6 @@ plt.ylabel('Fraction of suspended solid')
 plt.xlabel('Speed N[RPM]')
 plt.legend(loc=4)
 plt.ylim([-0.05,1.05])
+if (pdf): plt.savefig("./suspended_vs_N.pdf")
 plt.show()
 

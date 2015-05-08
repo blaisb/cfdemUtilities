@@ -22,8 +22,9 @@ import re # Ouhh regular expressions :)
 #==============================================================================
 #   OPTIONS AND USER PARAMETERS
 #==============================================================================
-rho=1400
-skip=2
+rho=1000
+skip=1
+fullMoments=False # Show viscous and pressure moments for AMI and SRF
 
 #==============================================================================
 #    READER OF LOG FILE
@@ -81,13 +82,17 @@ for i in range(1,len(sys.argv),2):
 
     if( mode=="srf" or mode=="SRF" or mode=="ami" or mode=="AMI" ):
         [t,momentVisc,momentPres] = readf(fname)
-        moment = momentVisc
-        for i in range(0,len(moment)):
-            moment[i]+= momentPres[i]
+        moment = numpy.asarray(momentVisc) + numpy.asarray(momentPres)
 
     if( mode=="ibm" or mode=="IBM" ):
         [t,x,y,moment] = numpy.loadtxt(fname,unpack=True)
         moment *= rho 
-    plt.plot(t[skip:-1],moment[skip:-1],'-o')
+    if (fullMoments):
+        plt.plot(t[skip:-1],moment[skip:-1],'-o',label="Combined_"+fname)
+        plt.plot(t[skip:-1],momentPres[skip:-1],label="Pressure")
+        plt.plot(t[skip:-1],momentVisc[skip:-1],label="Viscous")
+    else:
+        plt.plot(t[skip:-1],moment[skip:-1],'-o',label=fname)
+    plt.legend()
 plt.show()
 

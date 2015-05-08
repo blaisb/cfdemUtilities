@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------------------------------------
 #
-# This program averages openfoam probe data azimuthally 
+# This program averages openfoam probe data azimuthally. If variable is a scalar it also outputs the std-dev 
 # 
 # Output format : velocity : r z ux uy uz ur ut uz
 #                 scalar   : r z scalar                  
@@ -18,12 +18,15 @@ import sys
 import numpy
 import math
 import matplotlib.pyplot as plt
+from matplotlib import ticker #Manually change number of tick bro
 #----------------
 
 #================================
 #   USER DEFINED VARIABLES  
 #================================
+pdf=False
 tol=1e-4
+paperMode=False
 
 #===============================
 #   FIGURE OPTIONS
@@ -34,8 +37,8 @@ plt.rcParams['figure.figsize'] = 17, 8
 params = {'backend': 'ps',
              'axes.labelsize': 24,
              'axes.titlesize': 24,
-             'text.fontsize': 16,
-             'legend.fontsize': 18,
+             'text.fontsize': 20,
+             'legend.fontsize': 20,
              'xtick.labelsize': 16,
              'ytick.labelsize': 16,
              'text.usetex': True,
@@ -187,12 +190,21 @@ if (mode=="velocity"):
     # Radial graph
     plt.figure()
     plt.subplots_adjust(left=0.06, bottom=0.06, right=0.95, top=0.94, wspace=0.35)
-    plt.subplot(1,3,1) 
-    plt.imshow(acc[:,:,0],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+    plt.subplot(1,3,1)
+    if paperMode:
+        plt.imshow(acc[:,:,0],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmin=-0.5,vmax=1.5)
+    else:
+        plt.imshow(acc[:,:,0],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+  
     plt.xlabel("r [m]")
     plt.ylabel("z [m]")
     plt.title("Radial velocity")
-    plt.colorbar()
+    cbar = plt.colorbar( drawedges=False)
+    tick_locator = ticker.MaxNLocator(nbins=4)
+    cbar.locator = tick_locator
+    cbar.update_ticks()
+    cbar.ax.tick_params(labelsize=20) 
+    cbar.solids.set_edgecolor("face")
 
 
     # Azimuthal graph
@@ -201,17 +213,32 @@ if (mode=="velocity"):
     plt.xlabel("r [m]")
     plt.ylabel("z [m]")
     plt.title('Azimuthal velocity' )
-    plt.colorbar()
+    cbar = plt.colorbar( drawedges=False)
+    tick_locator = ticker.MaxNLocator(nbins=6)
+    cbar.locator = tick_locator
+    cbar.update_ticks()
+    cbar.ax.tick_params(labelsize=20) 
+    cbar.solids.set_edgecolor("face")
 
     # Axial graph
     plt.subplot(1,3,3)
     plt.title("Axial velocity")
     plt.xlabel("r [m]")
     plt.ylabel("z [m]")
-    plt.imshow(acc[:,:,2],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
-    plt.colorbar()
+    if paperMode:
+        plt.imshow(acc[:,:,2],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmin=-1.,vmax=1.)
+    else:
+        plt.imshow(acc[:,:,2],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+       
+    cbar = plt.colorbar( drawedges=False)
+    tick_locator = ticker.MaxNLocator(nbins=4)
+    cbar.locator = tick_locator
+    cbar.update_ticks()
+    cbar.ax.tick_params(labelsize=20) 
+    cbar.solids.set_edgecolor("face")
     
     # Time to display some stuff
+    if (pdf): plt.savefig("./velocity_prof.pdf")
     plt.show()
    
 if (mode=="scalar"):
@@ -225,20 +252,24 @@ if (mode=="scalar"):
 
     #Averaging procedure
     acc=numpy.zeros([nz,nr])
+    acc2=numpy.zeros([nz,nr])
     j=0
     k=0
     count=0
     pR=r[0]
     pZ=z[0]
     temp=0
+    temp2=0
     for i in range(0,len(z)):
         if (abs(r[i]-pR)>tol):
             count=max(count,1)
-            acc[k,j]=temp/count
+            acc[k,j]=temp/float(count)
+            acc2[k,j]=temp2/float(count)
             j+=1
             count=0
             pR=r[i]
             temp=0.
+            temp2=0.
 
         if (abs(z[i]-pZ)>tol):
 #            acc[j,k]=temp/count
@@ -247,21 +278,55 @@ if (mode=="scalar"):
             k+=1
 
         temp+=s[i]
+        temp2+=s[i]*s[i]
         count+=1
-        if (i ==(len(z)-1)): acc[k,j]=temp/count
+        if (i ==(len(z)-1)):
+            acc[k,j]=temp/count
+            acc2[k,j]=temp2/float(count)
+            
 
-    plt.figure(figsize=(6,8))
+    var = acc2-acc**2
+
+    dev = numpy.sqrt(var)
+    plt.figure(figsize=(12,8))
     plt.subplots_adjust(left=0.02, bottom=0.08, right=0.95, top=0.94, wspace=0.15)
-    plt.subplot(1,1,1)
+    plt.subplot(1,2,1)
     plt.xlabel("r [m]")
     plt.ylabel("z [m]")
-    
-    plt.imshow(acc[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")
+   
+
+
+    plt.imshow(acc[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmin=0.50,vmax=1.)
     if (len(sys.argv)>3):
         plt.title("%s" %(sys.argv[3]))
     else:
         plt.title("%s" %(sys.argv[1]))
-    plt.colorbar()
+
+
+    cbar = plt.colorbar( drawedges=False)
+    tick_locator = ticker.MaxNLocator(nbins=5)
+    cbar.locator = tick_locator
+    cbar.update_ticks()
+    cbar.ax.tick_params(labelsize=20) 
+    cbar.solids.set_edgecolor("face")
+
+
+    plt.subplot(1,2,2)
+    plt.xlabel("r [m]")
+    plt.ylabel("z [m]")
+    plt.imshow(dev[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmax=0.03)
+    if (len(sys.argv)>3):
+        plt.title("%s - std. dev." %(sys.argv[3]))
+    else:
+        plt.title("%s - std. dev." %(sys.argv[1]))
+
+    cbar = plt.colorbar( drawedges=False)
+    tick_locator = ticker.MaxNLocator(nbins=6)
+    cbar.locator = tick_locator
+    cbar.update_ticks()
+    cbar.ax.tick_params(labelsize=20) 
+    cbar.solids.set_edgecolor("face")
+    if (pdf): plt.savefig("./voidfraction_prof.pdf")
     plt.show()
    
 
