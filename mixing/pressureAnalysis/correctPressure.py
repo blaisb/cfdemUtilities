@@ -42,7 +42,7 @@ if (sys.argv[1][-3:]=="425"):
     print "Case of 425RPM"
     beg=50. 
     end=100.
-    gap=25.
+    gap=20.
 elif (sys.argv[1][-3:]=="350"):
     print "Case of 350RPM"
     beg=50
@@ -53,11 +53,26 @@ elif (sys.argv[1][-3:]=="575"):
     beg=20
     end=50
     gap=7
+elif (sys.argv[1][-3:]=="575"):
+    print "Case of 575RPM"
+    beg=20
+    end=50
+    gap=5
+elif (sys.argv[1][-3:]=="425"):
+    print "Case of 575RPM"
+    beg=20
+    end=50
+
 elif (sys.argv[1][-3:]=="600"):
     print "Case of 575RPM"
     beg=20
     end=50
     gap=-8
+elif (sys.argv[1][-3:]=="650"):
+    print "Case of 575RPM"
+    beg=20
+    end=50
+    gap=8
 
 print "Opening ", fileId
 t,p = numpy.loadtxt(fileId, unpack=True,comments="#")

@@ -41,9 +41,9 @@ plt.rcParams['figure.figsize'] = 14, 9
 params = {'backend': 'ps',
              'axes.labelsize': 24,
              'text.fontsize': 16,
-             'legend.fontsize': 18,
-             'xtick.labelsize': 16,
-             'ytick.labelsize': 16,
+             'legend.fontsize': 19,
+             'xtick.labelsize': 20,
+             'ytick.labelsize': 20,
              'text.usetex': True,
              }
 plt.rcParams.update(params)
@@ -87,8 +87,8 @@ speedFolder.sort()
 #Initiate figure 
 ax=plt.figure("Data and filter")
 axp = ax.add_subplot(111) 
-plt.ylabel('Pressure at the bottom (Pa) ')
-plt.xlabel('Time (s)')
+plt.ylabel('Pressure at the bottom [Pa] ')
+plt.xlabel('Time [s]')
 #plt.title('Frequency spectrum of $C_L$  ')
 #plt.yscale('log')
 #plt.xscale('log')
@@ -108,12 +108,12 @@ for k,i in enumerate(speedFolder):
     if (plotRaw): axp.plot(t, pS,'ko', label='Brute signal - ' +N+ ' RPM'+i,mfc='none')
     
     if (float(N)>510): 
-    axp.plot(t, pF,'--', label=N + ' RPM',linewidth=3.0)#,color=(0,(k-12)/6.,0,1))
+        axp.plot(t, pF,'--', label=N + ' RPM',linewidth=3.5)#,color=(0,(k-12)/6.,0,1))
     elif (float(N)<360):
-        axp.plot(t[::6], pF[::6],'^',markeredgecolor='none', label=N + ' RPM',linewidth=3.0)
+        axp.plot(t[::6], pF[::6],'^',markeredgecolor='none', label=N + ' RPM',linewidth=3.5)
     
     else:
-        axp.plot(t, pF, label=N + ' RPM',linewidth=3.0)
+        axp.plot(t, pF, label=N + ' RPM',linewidth=3.5)
     #col=k/float(len(speedFolder))
     #axp.plot(t,pF,label=N+ ' RPM', linewidth=3.0, color=(col,0,0, 1))
 

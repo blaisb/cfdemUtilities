@@ -29,22 +29,22 @@ import pylab
 #=====================
 pdf=True
 
-ptSims=[-7]
+ptSims=[-6]
 ptExp=[-10,-3]
 datN={}
 datP={}
 data={}
 datb={}
-confFactor=2.35
+confFactor=3.182
 
 # Figures
 plt.rcParams['figure.figsize'] = 10, 7
 params = {'backend': 'ps',
              'axes.labelsize': 20,
              'text.fontsize': 16,
-             'legend.fontsize': 18,
-             'xtick.labelsize': 16,
-             'ytick.labelsize': 16,
+             'legend.fontsize': 20,
+             'xtick.labelsize': 20,
+             'ytick.labelsize': 20,
              'text.usetex': True,
              }
 plt.rcParams.update(params)
@@ -79,17 +79,17 @@ for i,arg in enumerate(sys.argv):
             #Regression with three last points
             a,b = numpy.polyfit(Nss[ptExp[0]:ptExp[1]],ps[ptExp[0]:ptExp[1]],1)
             print a, b
-            plt.plot(Ns,ps,'g-s',label="Experimental Data")
-            plt.plot(Ns,a*Ns*Ns+b,'g--',linewidth=2.0)
+            plt.plot(Ns,a*Ns*Ns+b,'k--',linewidth=2.0)
+            plt.plot(Ns,ps,'k-o',linewidth=2.5,ms=9,mfc='none',mew=2,label="Experimental Data")
            
         else:
             #Regression with three last points
             a,b = numpy.polyfit(Nss[ptSims[0]:],ps[ptSims[0]:],1)
             print a, b
-            plt.plot(Ns,ps,'b-o',label="Simulations")
             Nt=numpy.insert(Ns,0,0.)
 
-            plt.plot(Nt,a*Nt*Nt+b,'b--',linewidth=2.0)
+            plt.plot(Nt,a*Nt*Nt+b,'k--',linewidth=2.0)
+            plt.plot(Ns,ps,'k-^', linewidth=2.5,ms=10,mfc='none',mew=2,label="Simulations")
         datN[arg]=Ns
         datP[arg]=ps
         data[arg]=a
@@ -99,7 +99,7 @@ for i,arg in enumerate(sys.argv):
 
 
 plt.ylabel('Pressure at the bottom of the tank [Pa]')
-plt.xlabel('Speed N[RPM]')
+plt.xlabel('Speed N [RPM]')
 plt.legend(loc=4)
 if (pdf): plt.savefig("./pressure_vs_N.pdf")
 plt.show()
@@ -117,8 +117,10 @@ for i,arg in enumerate(sys.argv):
         delta=max(rawfraction)-rawfraction[0]
         for k,val in enumerate(fraction):
             fraction[k] = (val-rawfraction[0])/delta
-        
-        if (i==1): 
+       
+        if (i!=1):
+          ax.plot(datN[arg],fraction,'k--^',label="Simulations",linewidth=2.0,ms=11,mfc='none',mew=2)
+        elif (i==1): 
             error=confFactor*wStd*fraction
             stdmin=[]
             stdmax=[]
@@ -130,12 +132,14 @@ for i,arg in enumerate(sys.argv):
                 #if ((n + error[m])>1.) : 
                     #stdmax[m]=1.-n
                     #stdmin[m]=error[m]
-            ax.errorbar(datN[arg],fraction,yerr=[stdmin,stdmax],fmt='g-s',label="Experimental Data",linewidth=1.5)
-        else:  ax.plot(datN[arg],fraction,'b--o',label="Simulations",linewidth=2.0)
+            
+            (_, caps, _) = ax.errorbar(datN[arg],fraction,yerr=[stdmin,stdmax],fmt='k-o',label="Experimental Data",linewidth=1.0,ms=8,capsize=6,mfc='none',mew=2)
 
+            for cap in caps:
+                cap.set_markeredgewidth(2)
 
 plt.ylabel('Fraction of suspended solid')
-plt.xlabel('Speed N[RPM]')
+plt.xlabel('Speed N [RPM]')
 plt.legend(loc=4)
 plt.ylim([-0.05,1.05])
 if (pdf): plt.savefig("./suspended_vs_N.pdf")

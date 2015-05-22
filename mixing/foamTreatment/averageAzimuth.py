@@ -24,9 +24,9 @@ from matplotlib import ticker #Manually change number of tick bro
 #================================
 #   USER DEFINED VARIABLES  
 #================================
-pdf=False
+pdf=True
 tol=1e-4
-paperMode=False
+paperMode=True
 
 #===============================
 #   FIGURE OPTIONS
@@ -39,8 +39,8 @@ params = {'backend': 'ps',
              'axes.titlesize': 24,
              'text.fontsize': 20,
              'legend.fontsize': 20,
-             'xtick.labelsize': 16,
-             'ytick.labelsize': 16,
+             'xtick.labelsize': 20,
+             'ytick.labelsize': 20,
              'text.usetex': True,
              }
    
@@ -296,7 +296,7 @@ if (mode=="scalar"):
    
 
 
-    plt.imshow(acc[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmin=0.50,vmax=1.)
+    plt.imshow(acc[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmin=0.4,vmax=1.)
     if (len(sys.argv)>3):
         plt.title("%s" %(sys.argv[3]))
     else:
@@ -304,7 +304,7 @@ if (mode=="scalar"):
 
 
     cbar = plt.colorbar( drawedges=False)
-    tick_locator = ticker.MaxNLocator(nbins=5)
+    tick_locator = ticker.MaxNLocator(nbins=7)
     cbar.locator = tick_locator
     cbar.update_ticks()
     cbar.ax.tick_params(labelsize=20) 
@@ -314,7 +314,7 @@ if (mode=="scalar"):
     plt.subplot(1,2,2)
     plt.xlabel("r [m]")
     plt.ylabel("z [m]")
-    plt.imshow(dev[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic",vmax=0.03)
+    plt.imshow(dev[:,:],extent=(numpy.min(rl),numpy.max(rl),numpy.min(zl),numpy.max(zl)),origin='lower',interpolation="bicubic")#,vmax=0.05)
     if (len(sys.argv)>3):
         plt.title("%s - std. dev." %(sys.argv[3]))
     else:
