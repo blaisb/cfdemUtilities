@@ -1,4 +1,4 @@
-# Last Modified: Tue 01 Apr 2014 11:39:06 AM EDT
+# Last Modified: Mon 15 Jun 2015 11:18:00 AM EDT
 # This program generates a particle file that can be read by LIGGGHTS in order to 
 # initialize particle in a given geometrical configuration
 # One can change the configuration by defining a new geometrical function in a typical pythonic fashion :)!
@@ -15,7 +15,7 @@ import numpy
 #**********************
 # USER PARAMETERS
 #**********************
-dpart = 0.0001
+dpart = 0.00010
 rhopart = 1000
 
 #case='Stokes'
@@ -60,6 +60,33 @@ def regularCircle(xc,yc,pz,r,n):
 	theta += dtheta
 
     return x,y,z,n
+
+
+def lambCircle(pz,R1,R2,n):
+
+    xt=numpy.linspace(-R2,R2,n)
+    yt=numpy.linspace(-R2,R2,n)
+    t=[]
+    x=[]
+    y=[]
+    for i,xx in enumerate(xt):
+        for j,yy in enumerate(yt):
+            if ((xx**2 + yy**2)<=R1**2 and xx>=0 ): 
+                t.append(1)
+            elif ((xx**2 + yy**2)<=R2**2 and xx>=0 ): 
+                t.append(3)
+            elif ((xx**2 + yy**2)<=R1**2 and xx<=0 ): 
+                t.append(2)
+            elif ((xx**2 + yy**2)<=R2**2 and xx<=0 ): 
+                t.append(4)
+       
+            if ((xx**2 + yy**2)<R2**2):
+                x.append(xx)
+                y.append(yy)
+    
+    z=numpy.ones([len(x)]) * pz
+            
+    return x,y,z,t,len(x)
 
 
 
@@ -129,12 +156,21 @@ if case=='Circle' :
     ly = 0.06
     [x,y,z,n] = regularCircle(xc,yc,0.05,r,201)
 
+#Parameters for the Lamb case
+if case=='Circle' : 
+    xc = 0.00
+    yc = 0.00
+    R2  = 0.015
+    R1 = 0.01
+    lx = 0.06
+    ly = 0.06
+    [x,y,z,t,n] = lambCircle(0.0005,R1,R2,150)
 rho = numpy.ones([n]) * rhopart
 dp = numpy.ones([n]) * dpart
-ntyp = 1
-typ= numpy.ones([n])
+ntyp = 4
+#t= numpy.ones([n])
 
-outputFile(x,y,z,rho,dp,typ,ntyp,x0,y0,lx,ly)
+outputFile(x,y,z,rho,dp,t,ntyp,x0,y0,lx,ly)
 
 
 

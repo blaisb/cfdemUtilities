@@ -24,9 +24,9 @@ import numpy
 R=0.180
 H=0.36
 
-nR=59
-nZ=100
-nT=30
+nR=49
+nZ=80
+nT=31
 
 #********************************
 #   FUNCTIONS
@@ -54,7 +54,7 @@ originalPath=os.getcwd()
 outputFile=sys.argv[1]
 
 r=numpy.linspace(2e-3,R,nR)
-Z=numpy.linspace(1e-3,H,nZ)
+Z=numpy.linspace(2e-3,H,nZ)
 t=numpy.linspace(1e-2,2*3.14159,nT)
 x=[]
 y=[]

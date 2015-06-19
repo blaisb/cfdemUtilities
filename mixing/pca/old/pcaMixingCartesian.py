@@ -20,7 +20,7 @@ import time
 import matplotlib.pyplot as plt
 import pylab
 from mpl_toolkits.mplot3d import Axes3D
-plot = False
+plot = True
 
 
 # User imput parameters
@@ -37,20 +37,21 @@ def reDev(x):
     return y
 
 
-nx, ny = (101, 101)
+nx, ny = (11, 11)
 x = numpy.linspace(0.001, 1, nx)
 y = numpy.linspace(0.001, 1, ny)
 xv, yv = numpy.meshgrid(x, y)
 
 
-fig=plt.figure("Trajectories")
+if(plot):
+    fig=plt.figure("Trajectories")
+    ax = Axes3D(fig)
 lFig=plt.figure("lambda")
 lAx=lFig.add_subplot(111)
 lAx.set_ylabel("Mixing index")
 lAx.set_xlabel("Sampling time")
 lAx.set_ylim(ymin=0,ymax=1.1)
 
-ax = Axes3D(fig)
 xvl=xv
 yvl=yv
 C=numpy.zeros([2,2])
@@ -66,7 +67,7 @@ for t in range(0,1100):
             u = -vScaleX * yvl
             v =  vScaleX * xvl
         elif (vStyle=="rotationRandom"):
-            temp = vScaleX *10* (numpy.random.random_sample([ny,nx])-0.5) 
+            temp = vScaleX *(numpy.random.random_sample([ny,nx])-0.5) 
             u = -vScaleX * yvl - temp * yvl 
             v =  vScaleX * xvl + temp * xvl
         elif (vStyle=="random"):
@@ -76,8 +77,8 @@ for t in range(0,1100):
             print "Invalid velocity profile"
         xvl = xvl + u
         yvl = yvl + v
-    zvl = xvl/xvl*t
-    if (t%5==0): ax.scatter(xvl[::nx+1],yvl[::nx+1],zvl[::nx+1],'o')
+    zvl = xvl/xvl 
+    if (t%5==0 and plot): ax.scatter(xvl[::nx+1],yvl[::nx+1],zvl[::nx+1],'o')
 
     #Construct correlation matrix
     C[0,0]=numpy.mean(reDev(xvl)*reDev(xv))

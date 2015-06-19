@@ -24,11 +24,11 @@ import sys
 #=====================
 #   User parameters
 #=====================
-presentationMode=True
+presentationMode=False
 png=True
 pdf=False
-skip=10
-step=7
+skip=0
+step=1
 
 #-----------------------------
 #Figure size and parameters
@@ -92,7 +92,7 @@ for i in range(1,len(sys.argv)):
         if i==3 : plt.plot(t[skip::step],dP[skip::step],label="500 RPM",alpha=0.35,linewidth=2.5)
 
     else:
-        plt.plot(t[::9],dP[::9],label=sys.argv[i])
+        plt.plot(t[skip::step],dP[skip::step],label=sys.argv[i])
 
 
 
@@ -103,7 +103,7 @@ dpUmf= numpy.ones(len(t)) * L * (
 
 plt.plot(t[::9],dpUmf[::9],'k',label="Ergun correlation",linewidth=4,alpha=0.75)
 plt.ylim([-60,200])
-plt.xlim([0,0.1])
+#plt.xlim([0,0.1])
 
 plt.ylabel('Pressure drop [Pa]')
 plt.xlabel('Time [s]')
