@@ -53,13 +53,14 @@ fname = sys.argv[1]
 
 #Input file
 print "R-> %s" %fname
-nx, uL2E = numpy.loadtxt(fname, unpack=True)
+nx, uL2E, pL2E = numpy.loadtxt(fname, unpack=True)
 
 dx=1./nx
 fig = plt.figure()
 
 ax = fig.add_subplot(111) # Create plot object
 ax.plot(dx,uL2E,'ko')
+ax.plot(dx,pL2E,'ks')
 
 ax.set_yscale('log')
 ax.set_xscale('log')
@@ -69,18 +70,29 @@ plt.xlabel('$\Delta x$')
 
 # Linear regression
 a,b = numpy.polyfit(numpy.log(dx),numpy.log(uL2E),1)
+a2,b2 = numpy.polyfit(numpy.log(dx),numpy.log(pL2E),1)
+
 
 ax.grid(b=True, which='minor', color='grey', linestyle='--')
+
 ax.grid(b=True, which='major', color='k', linestyle='-')
 
+plt.xlim([0.001,0.1])
+
 ax.plot(dx,uL2E,'ko',label='$\Vert e_{\mathbf{u}}\Vert_{2}$')
+ax.plot(dx,pL2E,'ks',label='$\Vert e_{p}\Vert_{2}$')
+
 ax.plot(dx,numpy.exp(b)*dx**a,'-k',label='$\Vert e_{\mathbf{u}}\Vert_{2}=%3.2f  \Delta x^{%3.2f}$' %(numpy.exp(b),a))
+ax.plot(dx,numpy.exp(b2)*dx**a2,'--k',label='$\Vert e_{p}\Vert_{2}=%3.2f  \Delta x^{%3.2f}$' %(numpy.exp(b2),a2))
 
 ax.legend(loc=2)
 
-print 'A u    = ', a
-print 'R^2 u  = ', rsquared(numpy.log(dx),numpy.log(uL2E))
+print 'A vel    = ', a
+print 'A pres   = ', a2
+print 'R^2 vel  = ', rsquared(numpy.log(dx),numpy.log(uL2E))
+print 'R^2 pres = ', rsquared(numpy.log(dx),numpy.log(pL2E))
 
-if (outputPDF): plt.savefig("./L2Error.pdf")
+if(outputPDF): plt.savefig("./L2Error.pdf")
+
 if (showGraphic): plt.show()
 

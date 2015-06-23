@@ -1,14 +1,11 @@
-# Last Modified: Tue 01 Apr 2014 12:05:06 PM EDT
-
 # This program converts OpenFOAM raw data for the velocity field to a text file with 
 # both position and velocity vector
 # 
 # Output format :
 # position (x y z) and velocity vector 
 # THIS PROGRAM REQUIRES A DIRECTORY U in the main folder
-
-# In the current form of the software the radius must be fixed byu the user
-
+#
+#
 # Author : Bruno Blais
 
 #Python imports
@@ -22,10 +19,15 @@ import numpy
 #********************************
 #   OPTIONS AND USER PARAMETERS
 #********************************
+#
+readZ=False
+readShear=True
+readPseudo=True
+
 #Initial time of simulation, final time and time increment must be specified by user
-t0=0.1
-tf=24.0
-dT=0.2
+t0=0.4
+tf=0.4
+dT=0.4
 
 #====================
 #    READERS	
@@ -99,14 +101,18 @@ def readfVector(fname):
 #======================
 
 # Check if the destination folder exists
-if not os.path.isdir("./particlesInfo"):
+if not os.path.isdir("./U"):
     print "********** Abort **********"
     print "The folder particlesInfo does not exist, you must create it manually in the working folder"
 
 #Name of the files to be considered
-inname= ['ccx', 'ccy','ccz','U']
+inname= ['ccx', 'ccy','ccz','p','U','cellVolumes']
+if readPseudo:
+    inname.append('pseudoEq')
+elif readShear:
+    inname.append('shearRate')
 
-os.chdir("./CFD") # go to directory
+os.chdir(sys.argv[1]) # go to directory
 
 nt=int((tf-t0)/dT)+1
 t=t0
@@ -121,16 +127,24 @@ for i in range(0,nt):
 
     [n,x] = readfScalar(inname[0])
     [n,y] = readfScalar(inname[1])
-    [n,z] = readfScalar(inname[2])
-    [n,u,v, w] = readfVector(inname[3])
-
+    if readZ :[n,z] = readfScalar(inname[2])
+    else : z=numpy.zeros([numpy.size(x)])
+    [n, p] = readfScalar(inname[3])
+    [n,u,v, w] = readfVector(inname[4])
+    [n, V] = readfScalar(inname[5])
+    if (readShear):
+        [n, shear] = readfScalar(inname[6])
+        
     #Create output file back in main folder
     outname="../../U/U_%s" %str(i)
     outfile=open(outname,'w')
 
     for j in range(0,n):
-	outfile.write("%5.5e %5.5e %5.5e %5.5e %5.5e %5.5e  \n" %(x[j],y[j],z[j],u[j],v[j],w[j]))
-
+	if readShear:
+            outfile.write("%5.5e %5.5e %5.5e %5.5e %5.5e %5.5e %5.5e %5.5e %5.5e \n" %(x[j],y[j],z[j],u[j],v[j],w[j],p[j],V[j],shear[j]))
+        else:
+            outfile.write("%5.5e %5.5e %5.5e %5.5e %5.5e %5.5e %5.5e %5.5e\n" %(x[j],y[j],z[j],u[j],v[j],w[j],p[j],V[j]))
+    
     outfile.close()
     t += dT
     #Go back to CFD directory

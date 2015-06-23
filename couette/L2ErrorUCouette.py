@@ -1,4 +1,3 @@
-# Last Modified: Tue 01 Apr 2014 12:05:33 PM EDT
 # This programs calculates the L2 error for a given velocity file
 #
 # Usage : python L2ErrorUCouette.py Velocity file
@@ -20,9 +19,11 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 #***********************************
 # Parameters for analytical solution
 #***********************************
-omega = 0.62832
-R=3.
-k = 1./3.;
+omega = 0.1000
+R=0.1
+k = 1./4.;
+analyseShear=False
+analysePseudo=True
 
 
 #===========================
@@ -30,32 +31,48 @@ k = 1./3.;
 #===========================
 
 fname = sys.argv[1]
+nx = int(sys.argv[2])
 
 # read the file
-print "R-> Velocity file has been read"
-[x,y,z,u,v,w] = numpy.loadtxt(fname, unpack=True)
+#print "R-> Velocity file has been read"
+if analysePseudo:
+    [x,y,z,u,v,w,p,V,pseudo] = numpy.loadtxt(fname, unpack=True)
+elif analyseShear:
+    [x,y,z,u,v,w,p,V,shear] = numpy.loadtxt(fname, unpack=True)
+else:
+    [x,y,z,u,v,w,p,V] = numpy.loadtxt(fname, unpack=True)
 
 r = numpy.sqrt(x**2 + y**2)
 ut = numpy.sqrt(u**2 + v**2)
 
-#Analytical solution for theta velocity in eulerian frame of reference
-uth = omega *k* R * (-r/(R) + (R)/r) / (1/k - k)
+#Analytical solution for theta velocity 
+rplot=[]
+errU =[]
+errV=[]
+errS=[]
+for i in range(0,len(r)):
+    if (r[i]>k*R and r[i] < R):
+        uth = omega *k* R * (-r[i]/(R) + (R)/r[i]) / (1/k - k)
+        rplot.append([r[i]])
+        errU.append([V[i]*(ut[i]-uth)**2])
+        errV.append([V[i]])
+        
+        
+        if(analyseShear):
+            shearth=2*(-2 * omega * (R/r[i])**2 * (k**2/(1-k**2)))**2
+            errS.append([V[i]*(shear[i]-shearth)**2])
+        if(analysePseudo):
+            pseudoth=16 * 2*(-2 * omega * (R)**2 * (k**2/(1-k**2)))**2 * r[i]**(-6)
+            errS.append([V[i]*(pseudo[i]-pseudoth)**2])
+            #print "Pseudo, pseudo th  : ", pseudo[i], pseudoth, r[i]
+nt = len(errU)
 
-err = numpy.sqrt((ut-uth)**2)
-L2err = numpy.sum(err)
-print "L2 err is : %5.5e" %(L2err)
+L2errU = numpy.sqrt(numpy.sum(errU) / numpy.sum(errV)) / omega / R
 
-fig = plt.figure()
+if (analyseShear or analysePseudo):
+    L2errS = numpy.sqrt(numpy.sum(errS) / numpy.sum(errV)) / omega
 
-#temp=numpy.ones([10,10])
-#x=numpy.arange(0,1,0.1)
-#y=numpy.arange(1,2,0.1)
-
-plt.plot(r,err,'o')
-#plt.subplot(1, 1, 1)
-#plt.pcolor(x, y, err, cmap='RdBu', vmin=numpy.min(err), vmax=numpy.max(err))
-#plt.title('pcolor')
-#plt.axis([x.min(), x.max(), y.min(), y.max()])
-#plt.colorbar()
-
-plt.show()
+if (analyseShear or analysePseudo):
+    print "%i %5.5e %5.5e" %(nx, L2errU,L2errS)
+else:
+    print "%i %5.5e" %(nx, L2errU)
