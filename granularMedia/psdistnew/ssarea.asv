@@ -1,0 +1,13 @@
+function out=ssarea(k,n);
+
+tol=1e-10;
+
+deb=1e-8
+fin=1e-6
+nb=1000;
+
+x=log(deb)::log(def)
+
+d2=quadgk(@(d)weibulld2(d,k,n),deb,fin,'Waypoints',)
+d3=quadgk(@(d)weibulld3(d,k,n),deb,fin,'Waypoints',)
+So=6*d2/d3/2710/1000

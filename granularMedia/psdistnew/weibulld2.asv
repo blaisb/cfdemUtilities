@@ -1,0 +1,10 @@
+function y = weibulld2(d,k,n)
+
+
+n=n
+k=k
+d22=d;
+
+(n/k)
+
+y=((n/k)*d.^(n-1)*(1/k)^(n-1).*exp(-(d.^(n)*(1/k)^n))).*d.^2;

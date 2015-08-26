@@ -14,20 +14,22 @@ import matplotlib.pyplot as plt
 
 # Simulation parameters to input manually
 #-----------------------------------------
-uf=5000
-mu = 1
-rhof = 1000 #fluid density
+uf=1e-5
+mu = 1e-5
+rhof = 1 #fluid density
 rhop = 2400 #particle density
-dp = 0.003
-tf = 0.0100 #final time of the test / stop the ODE
+dp = 0.01
+tf = 15.0000 #final time of the test / stop the ODE
 ratio=1.3
-drag="Newton" # or constant
+drag="Rong" # or constant
+g = 9.81
 #------------------------------------------
 
 #Initial velocity of the particle
-up=1000
+up=0
 dt =ratio * rhop * dp**2 / mu /18.
 dt= ratio * 1./(3./4. * rhof/rhop * 1./dp * abs(uf)*0.44)
+dt=0.0001
 n=tf/dt
 
 #Caclulate velocity evolution of particle
@@ -36,6 +38,7 @@ t = numpy.arange(0,tf+dt,dt)
 #Mass of particle
 m = 4 * numpy.pi / 3 * dp**3 / 8 * rhop
 u=numpy.zeros([len(t)]) + up
+x=numpy.zeros([len(t)]) 
 ReMax=0
 
 #Begin ODE scheme
@@ -50,7 +53,8 @@ for i in range(0,len(t)-1):
     elif (drag=="Newton"):
         Cd=0.44
     Fd = 0.125 * rhof * numpy.pi * dp**2 * numpy.abs(ur)*ur * Cd
-    u[i+1] = u[i] + dt * Fd/m
+    u[i+1] = u[i] + dt * Fd/m - dt * g
+
 
 # Numerical stability critera for comparison with measured stability
 print "Stability criteria is : ", rhop * dp**2 / mu /18.
@@ -61,3 +65,10 @@ print "Maximal Reynolds reached is: ", ReMax
 plt.figure()
 plt.plot(t,u)
 plt.show()
+
+#Plot evolution of velocity in space
+plt.figure()
+plt.plot(x,u)
+plt.show()
+
+

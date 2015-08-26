@@ -1,0 +1,57 @@
+#******************************************************************************
+#
+# LIGGGHTS script ot measure the radial distribution function of particles
+#
+# Author : Bruno Blais
+#
+#******************************************************************************
+
+#echo		both
+
+#Preliminaries
+echo both 
+units		    si
+atom_style	    granular
+boundary	    f f f # fixed bounary conditions for particles 
+atom_modify	    map array
+communicate	    single vel yes
+newton		    off
+processors	    2 2 1  # Parallel decomposition
+
+#read restart file
+read_restart	    @@
+
+# Neighbor lists
+neighbor	    0.01200 bin  #1.1 times radius is about right. Depends on how "fast" the granular flow is though
+neigh_modify	    every 1 check yes delay 0 one 100000 page 1000000 
+
+### Setup
+
+# Material properties required for new pair styles
+fix		    m1 all property/global youngsModulus peratomtype 1.e7 1e7
+fix		    m2 all property/global poissonsRatio peratomtype 0.25 0.25
+
+# peratomtypepair have to be input as a matrix
+fix		    m3 all property/global coefficientRestitution peratomtypepair 2 0.90 0.90 0.90 0.90
+fix		    m4 all property/global coefficientFriction peratomtypepair 2 0.02 0.02 0.02 0.02
+fix		    m5 all property/global coefficientRollingFriction peratomtypepair 2 0.02 0.02 0.02 0.02
+
+#Physics and contact model is required for RDF
+#pair_style	    gran model hertz tangential history rolling_friction cdt  limitForce on 
+pair_style          soft 0.012 #0.01
+pair_coeff	    * * 10
+
+fix		    integr all nve/sphere
+
+# Timestep
+timestep	    0.00000000001
+
+compute             myRDF all rdf ¢¢
+
+thermo              1
+thermo_style	    custom step atoms ke vol cpu
+
+fix		    vave all ave/time 1 1 1 c_myRDF[1] c_myRDF[2] c_myRDF[3] file ££ mode vector
+
+run		    0
+

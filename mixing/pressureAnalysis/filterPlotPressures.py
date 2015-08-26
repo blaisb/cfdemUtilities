@@ -34,9 +34,10 @@ plotRaw=False
 cutoff=0.300
 fs=5.
 filterOrder=3
+manual=False
 
 
-# Figures
+# Figures parameters
 plt.rcParams['figure.figsize'] = 14, 9
 params = {'backend': 'ps',
              'axes.labelsize': 24,
@@ -76,9 +77,6 @@ folder=sys.argv[1]
 
 # Acquire list of time step
 speedFolder=os.listdir(folder)
-
-# Go into folder
-#os.chdir(sys.argv[1]) #go to directory
 
 # Sort so that time will already be sorted
 speedFolder.sort() 

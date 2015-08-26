@@ -1,13 +1,15 @@
 ###############################################################################
 #
-#   File    : analysePressure.py
+#   File    : plotPressure.py
 #
-#   Run Instructions    : python plotPressure.py directory/with/the/files
+#   Usage    : python plotPressure.py experimentalData numericalData
 #
 #   Author : Bruno Blais
 # 
-#   Description :   This script takes all the files in a folder and output
-#                   a two column file that is N vs P
+#   Description :   This script plot the pressure from experimental and
+#                   numerical data and carries out the pressure analysis
+#                   to obtain the fraction of suspended solid
+#                   
 #
 #
 ###############################################################################
@@ -27,7 +29,7 @@ import pylab
 #=====================
 # User parameters
 #=====================
-pdf=True
+pdf=False
 
 ptSims=[-6]
 ptExp=[-10,-3]
@@ -76,27 +78,29 @@ for i,arg in enumerate(sys.argv):
         Nss=Ns*Ns
         if(arg=="experimentalData"):
             print "Experimental data exception"
-            #Regression with three last points
+            #Regression for experimental data
             a,b = numpy.polyfit(Nss[ptExp[0]:ptExp[1]],ps[ptExp[0]:ptExp[1]],1)
             print a, b
+
+            #Plot results
             plt.plot(Ns,a*Ns*Ns+b,'k--',linewidth=2.0)
             plt.plot(Ns,ps,'k-o',linewidth=2.5,ms=9,mfc='none',mew=2,label="Experimental Data")
            
         else:
-            #Regression with three last points
+            #Regression for numerical data
             a,b = numpy.polyfit(Nss[ptSims[0]:],ps[ptSims[0]:],1)
             print a, b
             Nt=numpy.insert(Ns,0,0.)
 
+            # Plot results
             plt.plot(Nt,a*Nt*Nt+b,'k--',linewidth=2.0)
             plt.plot(Ns,ps,'k-^', linewidth=2.5,ms=10,mfc='none',mew=2,label="Simulations")
+        
+        # Keep data for suspended fraction analysis
         datN[arg]=Ns
         datP[arg]=ps
         data[arg]=a
         datb[arg]=b
-
-
-
 
 plt.ylabel('Pressure at the bottom of the tank [Pa]')
 plt.xlabel('Speed N [RPM]')
@@ -111,7 +115,7 @@ for i,arg in enumerate(sys.argv):
     if (i>=1):
         rawfraction=[]
         fraction=[]
-        rawfraction=datP[arg]- (data[arg]*datN[arg]*datN[arg]+b)
+        rawfraction=datP[arg]- (data[arg]*datN[arg]*datN[arg])
         for j in range(0,len(rawfraction)):
             fraction.append(max(rawfraction[j],rawfraction[0]))
         delta=max(rawfraction)-rawfraction[0]

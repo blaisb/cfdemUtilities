@@ -3,16 +3,7 @@
 # USAGE : python ./kp.py TorquePressure TorqueViscosity
 
 # Author : Bruno Blais
-# Last modified : 10-02-2014
 
-#Python imports
-#----------------
-import os
-import sys
-import numpy
-import time
-import matplotlib.pyplot as plt
-#----------------
 mu=1
 rho = 1400
 N=60./60.

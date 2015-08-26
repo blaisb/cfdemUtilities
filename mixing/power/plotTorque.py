@@ -78,13 +78,14 @@ plt.title('Dynamic evolution of the torque')
 
 for i in range(1,len(sys.argv),2):
     mode=sys.argv[i]
-    fname = sys.argv[i+1] 
+    fname = sys.argv[i+1]
+    mode=mode.lower()
 
-    if( mode=="srf" or mode=="SRF" or mode=="ami" or mode=="AMI" ):
+    if( mode=="srf"  or mode=="ami" ):
         [t,momentVisc,momentPres] = readf(fname)
         moment = numpy.asarray(momentVisc) + numpy.asarray(momentPres)
 
-    if( mode=="ibm" or mode=="IBM" ):
+    if( mode=="ibm" ):
         [t,x,y,moment] = numpy.loadtxt(fname,unpack=True)
         moment *= rho 
     if (fullMoments):

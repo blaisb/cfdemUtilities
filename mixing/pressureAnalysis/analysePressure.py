@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 #   OPTIONS AND USER PARAMETERS
 #********************************
 plot=False
+
 samplePoints=50
 
 #======================
@@ -41,16 +42,13 @@ folder=sys.argv[1]
 # Acquire list of time step
 speedFolder=os.listdir(folder)
 
-# Go into folder
-#os.chdir(sys.argv[1]) #go to directory
-
-# Sort so that time will already be sorted
+# Sort so that speed will already be sorted
 speedFolder.sort() 
 
 N=[]
 pAvg=[]
 
-# Loop through all times
+# Loop through all speeds
 for i in speedFolder:
 
     print "Opening ", i
