@@ -16,7 +16,10 @@ import matplotlib.pyplot as plt
 #********************************
 #   OPTIONS AND USER PARAMETERS
 #********************************
-pdf=1
+pdf=True
+dp=3e-3
+dpAdim=True
+leg=["Initial configuration" , "3 s." , "6 s." , "10 s.", "30 s.", "50 s."]
 
 #Figure size
 plt.rcParams['figure.figsize'] = 10, 7
@@ -47,19 +50,27 @@ n,x,rdf,cord = numpy.loadtxt(sys.argv[1], unpack=True,skiprows=4)
 
 # Plot
 fig, ax1 = plt.subplots() 
-plt.ylabel('Radial distribution functoin ')
-plt.xlabel('distance $\mathbf{x}$')
-ax1.set_xlabel('distance $\mathbf{x}$')
+plt.ylabel('Radial distribution function ')
+if(dpAdim):
+    plt.xlabel('Dimensionless distance $\mathbf{x}/d_{p}$')
+else:
+    plt.xlabel('Distance $\mathbf{x}$')
+    
 ax1.set_ylabel('Radial distribution function g(r)')
 
 
 for i in range(1,len(sys.argv)):
     print sys.argv[i]
     n,x,rdf,cord = numpy.loadtxt(sys.argv[i], unpack=True,skiprows=4)
-    ax1.plot(x,rdf,linewidth=2.0)
+    if (dpAdim):
+        if (i==6):
+            ax1.plot(x/dp,rdf,'k',linewidth=2.0,label=leg[i-1])
+        else:
+            ax1.plot(x/dp,rdf,linewidth=2.0,label=leg[i-1])
+    else:
+        ax1.plot(x,rdf,linewidth=2.0)
 
-
-if (pdf): plt.savefig("./fftOnCylinder.pdf")
-
+if (pdf): plt.savefig("./rdf.pdf")
+plt.legend()
 plt.show()
 

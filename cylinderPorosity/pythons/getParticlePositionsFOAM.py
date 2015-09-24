@@ -21,9 +21,9 @@ import numpy
 #   OPTIONS AND USER PARAMETERS
 #********************************
 #Initial time of simulation, final time and time increment must be specified by user
-t0=2.5
-tf=10.0
-dT=0.5
+t0=5
+tf=115.0
+dT=5
 radius = 0.0007485
 height=0.05
 ri = 0.0064
@@ -73,7 +73,7 @@ def readf(fname):
 
 #Name of the files to be considered
 inname= ['lagrangian/particleCloud/positions']
-os.chdir("./CFD") # go to directory
+os.chdir("./") # go to directory
 
 nt=int((tf-t0)/dT)
 t=t0
@@ -89,7 +89,7 @@ for i in range(0,nt):
 
 
     #Create output file back in main folder
-    outname="../../particlesInfo/particlesInfo_%s" %str(i)
+    outname="../particlesInfo/particlesInfo_%s" %str(i)
     outfile=open(outname,'w')
 
     #Read each variables to be able to dimensionalise final array

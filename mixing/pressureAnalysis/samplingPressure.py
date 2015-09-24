@@ -28,6 +28,9 @@ import matplotlib.pyplot as plt
 #********************************
 rho=1400
 plot=False
+R=0.365/2.
+f1=0.40
+f2=0.60
 
 
 #======================
@@ -61,7 +64,12 @@ for i in timeFolder:
     fname = folder+"/"+i+"/p_constantPlane.raw"
     x,y,z,p = numpy.loadtxt(fname, unpack=True,comments="#")
 
+    r = (x*x+y*y)**(1./2.)
+
     t.append(float(i))
+    indext=numpy.where(r>f1*R)
+    index=numpy.where(r[indext]<f2*R)
+    
     pAvg.append(rho*numpy.sum(p*vol)/numpy.sum(vol))
 
 print "Post-processing over"

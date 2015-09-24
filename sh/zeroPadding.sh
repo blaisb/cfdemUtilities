@@ -7,6 +7,6 @@ for file in $prefix[0-9]*.dump; do
   number=${postfile%.dump}
   i=$number
   # copy to a new name in a new folder
-  cp ${file} ./$2/$(printf mixerCoupled_%09d.dump $i)
+  mv ${file} ./$2/$(printf mixerCoupled_%09d.dump $i)
 done
 
