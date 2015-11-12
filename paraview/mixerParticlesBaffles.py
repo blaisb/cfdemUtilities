@@ -8,11 +8,11 @@ opacityTank=0.2
 
 liste = glob.glob('./post/VTK/mixer_*.vtk')
 listeImpl = glob.glob('./post/VTK/impeller_*.stl')
-listeTank = glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/tank.stl')
-listeBafflesB = glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/baffles/baffB.stl')
-listeBafflesF = glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/baffles/baffF.stl')
-listeBafflesL = glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/baffles/baffL.stl')
-listeBafflesR = glob.glob('/home/bruno/doctorat/mesh/PBT_Manon/baffles/baffR.stl')
+listeTank = glob.glob('/home/bruno/cfdem/run/mesh/PBT_Manon/tank.stl')
+listeBafflesB = glob.glob('/home/bruno/cfdem/run/mesh/PBT_Manon/baffles/baffB.stl')
+listeBafflesF = glob.glob('/home/bruno/cfdem/run/mesh/PBT_Manon/baffles/baffF.stl')
+listeBafflesL = glob.glob('/home/bruno/cfdem/run/mesh/PBT_Manon/baffles/baffL.stl')
+listeBafflesR = glob.glob('/home/bruno/cfdem/run/mesh/PBT_Manon/baffles/baffR.stl')
 
 # Function to sort the files in a natural fashion
 def natural_sort(l): 
@@ -26,13 +26,11 @@ listeImpl=natural_sort(listeImpl)
 # LOAD THE IMPELLER
 impeller=STLReader(FileNames=listeImpl)
 
-GetActiveSource()
+#GetActiveSource()
 DataRepresentation1 = Show()
-DataRepresentation1.PointSpriteDefaultsInitialized = 1
 DataRepresentation1.SelectionPointFieldDataArrayName = 'STLSolidLabeling'
 DataRepresentation1.SelectionCellFieldDataArrayName = 'STLSolidLabeling'
 DataRepresentation1.ColorArrayName = ('CELL_DATA', '')
-DataRepresentation1.RadiusRange = [-0.08255, 0.08255]
 DataRepresentation1.ScaleFactor = 0.02920000106096268
 
 STLReader2 = FindSource( "STLReader2" )
@@ -45,23 +43,11 @@ tank=STLReader(FileNames=listeTank)
 
 STLReader2 = GetActiveSource()
 RenderView1 = GetRenderView()
-RenderView1.CameraPosition = [0.0, 0.0, 1.4038138401361357]
-RenderView1.CameraClippingRange = [0.8459256875250272, 1.6967960548430514]
-RenderView1.CameraFocalPoint = [0.0, 0.0, 0.18250000476837158]
-RenderView1.CameraParallelScale = 0.31609928064038195
-RenderView1.CenterOfRotation = [0.0, 0.0, 0.18250000476837158]
-
 DataRepresentation1 = Show()
-DataRepresentation1.ConstantRadius = 0.18250000476837158
 DataRepresentation1.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation1.PointSpriteDefaultsInitialized = 1
 DataRepresentation1.SelectionPointFieldDataArrayName = 'STLSolidLabeling'
 DataRepresentation1.SelectionCellFieldDataArrayName = 'STLSolidLabeling'
 DataRepresentation1.ColorArrayName = ('CELL_DATA', 'STLSolidLabeling')
-DataRepresentation1.Texture = []
-DataRepresentation1.AmbientColor = [0.0, 0.0, 0.0]
-DataRepresentation1.CubeAxesColor = [0.0, 0.0, 0.0]
-DataRepresentation1.RadiusRange = [-0.1825, 0.1825]
 DataRepresentation1.ScaleFactor = 0.03650000095367432
 
 DataRepresentation2 = GetDisplayProperties( STLReader2 )
@@ -83,7 +69,6 @@ RenderView1.CenterOfRotation = [-0.00032399967312812805, -0.0002795010805130005,
 DataRepresentation1 = Show()
 DataRepresentation1.ConstantRadius = 0.0015
 DataRepresentation1.EdgeColor = [0.0, 0.0, 0.5000076295109483]
-DataRepresentation1.PointSpriteDefaultsInitialized = 1
 DataRepresentation1.SelectionPointFieldDataArrayName = 'f'
 DataRepresentation1.SelectionCellFieldDataArrayName = 'radius'
 DataRepresentation1.ColorArrayName = ('POINT_DATA', 'radius')
@@ -111,14 +96,14 @@ DataRepresentation2.Opacity = opacityBaffles
 DataRepresentation2.ColorArrayName = ('CELL_DATA', '')
 RenameSource("BaffR", STLReader3)
 
-#PARTICLES
+##PARTICLES
 
 square=LegacyVTKReader(FileNames=liste)
 
 RenderView1 = GetRenderView()
 RenderView1.CameraPosition = [-0.00032399967312812805, -0.0002795010805130005, 0.799224061999444]
 
-# L Baffle
+## L Baffle
 
 bafflesL=STLReader(FileNames=listeBafflesL)
 

@@ -29,7 +29,7 @@ import pylab
 #=====================
 # User parameters
 #=====================
-pdf=False
+pdf=True
 
 ptSims=[-6]
 ptExp=[-10,-3]
@@ -84,7 +84,7 @@ for i,arg in enumerate(sys.argv):
 
             #Plot results
             plt.plot(Ns,a*Ns*Ns+b,'k--',linewidth=2.0)
-            plt.plot(Ns,ps,'k-o',linewidth=2.5,ms=9,mfc='none',mew=2,label="Experimental Data")
+            plt.plot(Ns,ps,'k-o',linewidth=2.5,ms=9,mfc='none',mew=2,label="Experimental data")
            
         else:
             #Regression for numerical data
@@ -94,7 +94,7 @@ for i,arg in enumerate(sys.argv):
 
             # Plot results
             plt.plot(Nt,a*Nt*Nt+b,'k--',linewidth=2.0)
-            plt.plot(Ns,ps,'k-^', linewidth=2.5,ms=10,mfc='none',mew=2,label="Simulations")
+            plt.plot(Ns,ps,'k-^', linewidth=2.5,ms=10,mfc='none',mew=2,label="Simulation results")
         
         # Keep data for suspended fraction analysis
         datN[arg]=Ns
@@ -123,7 +123,7 @@ for i,arg in enumerate(sys.argv):
             fraction[k] = (val-rawfraction[0])/delta
        
         if (i!=1):
-          ax.plot(datN[arg],fraction,'k--^',label="Simulations",linewidth=2.0,ms=11,mfc='none',mew=2)
+          ax.plot(datN[arg],fraction,'k--^',label="Simulation results",linewidth=2.0,ms=11,mfc='none',mew=2)
         elif (i==1): 
             error=confFactor*wStd*fraction
             stdmin=[]
@@ -137,12 +137,12 @@ for i,arg in enumerate(sys.argv):
                     #stdmax[m]=1.-n
                     #stdmin[m]=error[m]
             
-            (_, caps, _) = ax.errorbar(datN[arg],fraction,yerr=[stdmin,stdmax],fmt='k-o',label="Experimental Data",linewidth=1.0,ms=8,capsize=6,mfc='none',mew=2)
+            (_, caps, _) = ax.errorbar(datN[arg],fraction,yerr=[stdmin,stdmax],fmt='k-o',label="Experimental data",linewidth=1.0,ms=8,capsize=6,mfc='none',mew=2)
 
             for cap in caps:
                 cap.set_markeredgewidth(2)
 
-plt.ylabel('Fraction of suspended solid')
+plt.ylabel('Fraction of suspended solids')
 plt.xlabel('Speed N [RPM]')
 plt.legend(loc=4)
 plt.ylim([-0.05,1.05])

@@ -17,7 +17,7 @@ done
 
 if $convert;
 then
-    python $HOME/LIGGGHTS3/mylpp/src/lpp.py $case/DEM/post/mixerC* -o $case/DEM/post/mixer_
+    python $HOME/liggghts/lpp/src/lpp.py $case/DEM/post/mixerC* -o $case/DEM/post/mixer_
 fi
 
 rm $case/DEM/post/*bound*
@@ -27,8 +27,8 @@ cp $case/DEM/post/*.stl $case/DEM/post/VTK/
 
 if $baffles;
 then
-    cp ~/utils/cfdemUtilities/paraview/mixerParticlesBaffles.py $case/DEM/
+    cp ~/cfdem/cfdemUtilities/paraview/mixerParticlesBaffles.py $case/DEM/
 else
-    cp ~/utils/cfdemUtilities/paraview/mixerParticles.py $case/DEM/
+    cp ~/cfdem/cfdemUtilities/paraview/mixerParticles.py $case/DEM/
 fi
 

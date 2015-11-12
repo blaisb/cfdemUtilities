@@ -35,6 +35,9 @@ cutoff=0.300
 fs=5.
 filterOrder=3
 manual=False
+symFreq=6 # In the paper this was 6
+cut1=360
+cut2=510
 
 
 # Figures parameters
@@ -85,7 +88,7 @@ speedFolder.sort()
 #Initiate figure 
 ax=plt.figure("Data and filter")
 axp = ax.add_subplot(111) 
-plt.ylabel('Pressure at the bottom [Pa] ')
+plt.ylabel('Pressure at the bottom of the tank [Pa] ')
 plt.xlabel('Time [s]')
 #plt.title('Frequency spectrum of $C_L$  ')
 #plt.yscale('log')
@@ -105,10 +108,10 @@ for k,i in enumerate(speedFolder):
     pF=butter_lowpass_filter(pS,cutoff,fs,order=filterOrder)
     if (plotRaw): axp.plot(t, pS,'ko', label='Brute signal - ' +N+ ' RPM'+i,mfc='none')
     
-    if (float(N)>510): 
+    if (float(N)>cut2): 
         axp.plot(t, pF,'--', label=N + ' RPM',linewidth=3.5)#,color=(0,(k-12)/6.,0,1))
-    elif (float(N)<360):
-        axp.plot(t[::6], pF[::6],'^',markeredgecolor='none', label=N + ' RPM',linewidth=3.5)
+    elif (float(N)<cut1):
+        axp.plot(t[::symFreq], pF[::symFreq],'^',markeredgecolor='none', label=N + ' RPM',linewidth=3.5)
     
     else:
         axp.plot(t, pF, label=N + ' RPM',linewidth=3.5)

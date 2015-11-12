@@ -62,7 +62,7 @@ try:
     fname=sys.argv[1]
     mode=sys.argv[2]
 except:
-    print "Insufficient number of arguments, need two files names"
+    print "Insufficient number of arguments, need file name and mode"
 
 # The variable is a vector bro-dude-migo
 if (mode=="velocity"):

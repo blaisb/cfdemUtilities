@@ -12,12 +12,14 @@
 #----------------
 import numpy
 import math
+import re
 #----------------
 
 #Function variables
 #-------------------
 tol=1e-4
 uLimit=10 #Limit for the velocities to prevent absurd results (sometime happens)
+openFoamVersion="2.4"
 
 #================================
 #   FUNCTION
@@ -66,13 +68,32 @@ def scalarAverage(fname,impeller,impellerType):
     infile = open(fname,'r')
 
 
-#Get the first three lines to get the x y z positions
-    l=infile.readline()
-    x=getCoordFromLine(l)
-    l=infile.readline()
-    y=getCoordFromLine(l)
-    l=infile.readline()
-    z=getCoordFromLine(l)
+    if (openFoamVersion == "2.4"):
+        print "Using openFoamVersion 2.4+ postprocessing" 
+        readFile=True
+        x=numpy.array([])
+        y=numpy.array([])
+        z=numpy.array([])
+        while readFile:
+            l=infile.readline()
+            if (len(l) >1 and l[2]=="P"):
+                        #print l
+                        l_str=re.split(' |\(| |\)|',l)
+                        x=numpy.append(x,float(l_str[-4]))
+                        y=numpy.append(y,float(l_str[-3]))
+                        z=numpy.append(z,float(l_str[-2]))
+            else:
+                readFile=False
+
+        
+    else:
+    #Get the first three lines to get the x y z positions
+        l=infile.readline()
+        x=getCoordFromLine(l)
+        l=infile.readline()
+        y=getCoordFromLine(l)
+        l=infile.readline()
+        z=getCoordFromLine(l)
 
 #Transform the x y z positions to r t z
     r = numpy.sqrt(x*x+y*y)
@@ -101,7 +122,7 @@ def scalarAverage(fname,impeller,impellerType):
             nz+=1
             zl.append(rr)
 
-    #Acquire the U V and W vector associated with each position
+    #Acquire the scalar vector associated with each position
     l=infile.readline()
     s=getScalarFromLine(l)
 
