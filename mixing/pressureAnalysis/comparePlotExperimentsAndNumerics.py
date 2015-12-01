@@ -34,8 +34,8 @@ import pylab
 pdf=True
 confFactor=2.7
 
-ptSims=[-4]
-ptExp=[-5,-1]
+ptSims=[-5]
+ptExp=[-5]
 datN={}
 datP={}
 datA={}
@@ -59,6 +59,7 @@ params = {'backend': 'ps',
              }
 plt.rcParams.update(params)
 
+colors=['red','blue','green','pink']
 
 
 #=====================
@@ -89,12 +90,12 @@ for i,arg in enumerate(sys.argv):
                 ps=data[:,j+nExp]
                 Nss=Ns*Ns
                 #Regression for experimental data
-                a,b = numpy.polyfit(Nss[ptExp[0]:ptExp[1]],ps[ptExp[0]:ptExp[1]],1)
+                a,b = numpy.polyfit(Nss[ptExp[0]:],ps[ptExp[0]:],1)
                 print a, b
 
                 #Plot results
-                plt.plot(Ns,a*Ns*Ns+b,'k--',linewidth=2.0)
-                plt.plot(Ns,ps,'k-o',linewidth=2.5,ms=9,mfc='none',mew=2,label="Experimental Data")
+                plt.plot(Ns,a*Ns*Ns+b,'--',linewidth=2.0,color=colors[j])
+                plt.plot(Ns,ps,'-o',linewidth=2.5,ms=9,mfc='none',mew=2,color=colors[j],label="Experimental Data")
                
                 k=str(arg+str(j))
                 datN[k]=Ns

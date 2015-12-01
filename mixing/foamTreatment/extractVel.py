@@ -101,7 +101,7 @@ print "Post-processing time : ", sys.argv[1]
 [n,x] = readfScalar(inname[0])
 [n,y] = readfScalar(inname[1])
 [n,z] = readfScalar(inname[2])
-[n,u, v, w] = readfVector(inname[4])
+[n,u, v, w] = readfVector(inname[3])
 
 
 #Create output file back in main folder

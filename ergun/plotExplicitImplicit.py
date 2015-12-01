@@ -96,7 +96,7 @@ dpUmf= numpy.ones(len(t1)) * L * (
               +1.75*((1-epsilon)/epsilon**3)*((rhoG*Umf**2)/(phip*dp))
         );
 
-plt.plot(t1,dpUmf,'k',label="Ergun correlation",linewidth=3)
+plt.plot(t1,dpUmf,'k',label="Ergun equation",linewidth=3)
 plt.ylim([-10,150])
 
 

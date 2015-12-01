@@ -98,10 +98,17 @@ dpUmf= L * (
 for i in range(0,len(U)):
     if U[i]>Umf : dpErgun[i]=dpUmf
 
-plt.plot(U,dpErgun,'k-',alpha=0.8,linewidth=3,label="Ergun correlation")
-plt.plot(NS,pS,'--sc',linewidth=2.5,markersize=8,alpha=1, label="Simulations with explicit momentum coupling")
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+plt.plot(U,dpErgun,'k-',alpha=0.8,linewidth=3,label="Ergun equation")
+plt.plot(NS,pS,'--sc',linewidth=2.5,markersize=8,alpha=1, label="Explicit momentum exchange")
 plt.ylabel('Pressure drop [Pa]')
 plt.xlabel('Inlet velocity u [m.s$^{-1}$]')
+plt.plot((Umf,Umf ), (0,100), 'k--',linewidth=2.5)
+ax.annotate(' $U_{mf}$', xy=(Umf+0.000001, 70), xytext=(Umf+0.00001,60 ),
+            arrowprops=dict(facecolor='black', shrink=0.05),
+             fontsize=26)
 plt.legend(loc=4)
 if (pdf): plt.savefig("./pressureErgun.pdf")
 plt.show()

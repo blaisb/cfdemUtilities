@@ -18,7 +18,7 @@ import sys
 import numpy
 import math
 import matplotlib.pyplot as plt
-from matplotlib import ticker #Manually change number of tick bro
+from matplotlib import ticker 
 #----------------
 
 #================================
