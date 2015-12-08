@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 #********************************
 plot=False
 
-samplePoints=100
+samplePoints=200
 
 #======================
 #   MAIN

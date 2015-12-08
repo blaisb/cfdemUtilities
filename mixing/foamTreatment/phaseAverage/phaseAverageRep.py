@@ -25,6 +25,10 @@ from vtk.util import numpy_support
 #================================
 #   USER DEFINED VARIABLES  
 #================================
+UsCut=1e-6
+muf=0.0516
+rhof=1207
+dp=0.003
 
 #********************************
 # FUNCTIONS
@@ -80,19 +84,32 @@ n=0
 
 for i in timeFolder:
     if (float(i)>t0 and float(i)<tf) :
-        fname=folder+"/"+i+"/"+label
-        print fname
-        if init==False:
-            data=readVTK(reader,fname)
+        print folder+"/"+i+"/"
+        fname=folder+"/"+i+"/"+"U"+label
+        dataU=readVTK(reader,fname)
+        fname=folder+"/"+i+"/"+"U"+label
+        dataUs=readVTK(reader,fname)
+        dataInstant=(np.abs(dataUs-dataU))/muf*rhof*dp
+        if (init==False):
+            occ=np.zeros([np.size(dataInstant,0)])
+        occ+=1
+        for i in range(0,np.size(dataUs,0)):
+            if ((abs(dataUs[i,0]) + abs(dataUs[i,1]) + abs(dataUs[i,2])) <UsCut):
+                dataInstant[i,:]=0.
+                occ[i]-=1
+        if (init==False):
+            data=dataInstant
             init=True
-            print "Phase average is initialized"
         else:
-            data+=readVTK(reader,fname)
+            data+=dataInstant
         n+=1
 
 #Phase summation is complete
 print "Phase averaging with N=",n, " samples is completed"
-data = data / n
+print "Minimal occurance : ", np.min(occ), " \tMaximal occurence : ", np.max(occ)
+
+for i in range(0,np.size(occ)):
+    data[i]=data[i]/max(occ[i],1)
 
 reader.Update()
 polydata = reader.GetOutput()

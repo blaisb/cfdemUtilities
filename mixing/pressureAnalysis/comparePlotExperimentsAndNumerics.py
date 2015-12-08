@@ -32,10 +32,10 @@ import pylab
 # User parameters
 #=====================
 pdf=True
-confFactor=2.7
+xErrBar=False
 
-ptSims=[-5]
-ptExp=[-5]
+ptSims=[-4]
+ptExp=[-4]
 datN={}
 datP={}
 datA={}
@@ -43,9 +43,10 @@ datB={}
 xSusp={}
 argList=[]
 avgList=[]
-confFactor=3.182
+confFactor=2.78
 plotExp=False
 plotAvg=True
+
 
 # Figures
 plt.rcParams['figure.figsize'] = 10, 7
@@ -172,9 +173,13 @@ if (plotAvg):
     xErr=numpy.std(xToAvg,axis=1)
     NErr=numpy.std(NToAvg,axis=1)
     lab="Averaged experiments"
-    (_, caps, _)=ax.errorbar(NAvg,xAvg,xerr=confFactor*NErr,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+    if xErrBar:
+        (_, caps, _)=ax.errorbar(NAvg,xAvg,xerr=confFactor*NErr,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+    else :
+        (_, caps, _)=ax.errorbar(NAvg,xAvg,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
 
-plt.ylabel('Fraction of suspended solid')
+
+plt.ylabel('Fraction of suspended particles')
 plt.xlabel('Speed N [RPM]')
 plt.legend(loc=4)
 plt.ylim([-0.05,1.05])
