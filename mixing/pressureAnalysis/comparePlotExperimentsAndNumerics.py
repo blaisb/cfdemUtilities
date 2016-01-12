@@ -34,7 +34,7 @@ import pylab
 pdf=True
 xErrBar=False
 
-ptSims=[-4]
+ptSims=[-2]
 ptExp=[-4]
 datN={}
 datP={}
@@ -158,6 +158,10 @@ for i,arg in enumerate(argList):
         else:
             lab="Simulations"
             ax.plot(datN[arg],fraction,'k-^',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+            print "Saving results"
+            B = [numpy.asarray(datN[arg]).T,numpy.asarray(fraction).T]
+            numpy.savetxt("processedNumericalData", numpy.asarray(B).T, fmt='%.8e', delimiter=' ', newline='\n')
+
         
         xSusp[arg]=fraction
 
@@ -172,11 +176,14 @@ if (plotAvg):
     NAvg=numpy.average(NToAvg,axis=1)
     xErr=numpy.std(xToAvg,axis=1)
     NErr=numpy.std(NToAvg,axis=1)
+    fErr=confFactor*xErr
+    for i,j in enumerate(fErr):
+        fErr[i]=min(1.-xAvg[i],j)
     lab="Averaged experiments"
     if xErrBar:
         (_, caps, _)=ax.errorbar(NAvg,xAvg,xerr=confFactor*NErr,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
     else :
-        (_, caps, _)=ax.errorbar(NAvg,xAvg,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+        (_, caps, _)=ax.errorbar(NAvg,xAvg,yerr=[confFactor*xErr,fErr],fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
 
 
 plt.ylabel('Fraction of suspended particles')
@@ -186,5 +193,9 @@ plt.ylim([-0.05,1.05])
 if (pdf): plt.savefig("./suspended_vs_N.pdf")
 plt.show()
 
+# Save results
+print "Saving results"
+A = [numpy.asarray(NAvg).T,numpy.asarray(xAvg).T,numpy.asarray(xErr).T]
+numpy.savetxt("processedExperimentalData", numpy.asarray(A).T, fmt='%.8e', delimiter=' ', newline='\n')
 
 

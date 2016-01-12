@@ -26,6 +26,8 @@ from vtk.util import numpy_support
 #   USER DEFINED VARIABLES  
 #================================
 
+
+
 #********************************
 # FUNCTIONS
 #********************************
@@ -45,10 +47,6 @@ def readVTK(reader,fname):
     var_numpy_array = numpy_support.vtk_to_numpy(var_vtk_array)
     return var_numpy_array
 
-       #T = T*100. #
-    #C=numpy_support.numpy_to_vtk(T)
-    #polydata.GetCellData().SetScalars(C)
-    #reader.Update()
 
 
 #================================
