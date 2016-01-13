@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 #********************************
 #   OPTIONS AND USER PARAMETERS
 #********************************
-rho=1400
+rho=1207
 plot=False
 R=0.365/2.
 f1=0.40

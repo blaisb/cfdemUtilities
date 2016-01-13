@@ -20,7 +20,6 @@ import os
 import sys
 import numpy 
 import math
-import matplotlib.pyplot as plt
 #----------------
 
 #********************************
