@@ -70,7 +70,7 @@ for i in timeFolder:
     indext=numpy.where(r>f1*R)
     index=numpy.where(r[indext]<f2*R)
     
-    pAvg.append(rho*numpy.sum(p*vol)/numpy.sum(vol))
+    pAvg.append(rho*numpy.sum(p[index]*vol[index])/numpy.sum(vol[index]))
 
 print "Post-processing over"
 

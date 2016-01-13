@@ -25,7 +25,6 @@ import math
 #********************************
 #   OPTIONS AND USER PARAMETERS
 #********************************
-rho=1207
 plot=False
 R=0.365/2.
 f1=0.00
@@ -66,10 +65,8 @@ for i in timeFolder:
     r = (x*x+y*y)**(1./2.)
 
     t.append(float(i))
-    indext=numpy.where(r>f1*R)
-    index=numpy.where(r[indext]<f2*R)
     
-    pAvg.append(rho*numpy.sum(p*vol)/numpy.sum(vol))
+    pAvg.append(numpy.sum(p*vol)/numpy.sum(vol))
 
 print "Post-processing over"
 
@@ -79,11 +76,3 @@ print "Saving results"
 N = [numpy.asarray(t).T,numpy.asarray(pAvg).T]
 numpy.savetxt("tangentBottom", numpy.asarray(N).T, fmt='%.8e', delimiter=' ', newline='\n')
 
-
-#Plot results
-if (plot):
-    plt.plot(t,pAvg)
-
-    plt.ylabel('Bottom voidfraction')
-    plt.xlabel('Time (s)')
-    plt.show()
