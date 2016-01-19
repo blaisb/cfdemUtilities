@@ -15,8 +15,6 @@
 #----------------
 import os
 import sys
-from scipy.interpolate import griddata
-import sys
 import numpy as np
 import vtk
 from vtk.util import numpy_support
