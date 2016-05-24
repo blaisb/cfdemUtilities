@@ -73,11 +73,16 @@ def setZeroToNaN(array):
 filename=sys.argv[1]
 
 #Set the points between which the line is constructed.
-p1=[0.1,0.,0.0]
-p2=[0.1,0.,0.365]
+#p1=[0.0,0.,0.065]
+#p2=[0.1825,0.,0.065]
+p1=[0.0,0.,0.0010]
+p2=[0.1825,0.,0.0010]
 
 #Define the numer of interpolation points
-numPoints=100
+numPoints=20005
+
+ptLine=np.linspace(0,np.linalg.norm(np.asarray(p2)-np.asarray(p1)),numPoints+1)
+
 
 reader = readVTK(filename) # read the VTKfile
 #reader = vtk.vtkPolyDataReader()
@@ -91,5 +96,5 @@ line=createLine(p1,p2,numPoints) # Create the line
 points,U =  probeOverLine(line,reader) # interpolate the data over the line
 
 U = setZeroToNaN(U) # Set the zero's to NaN's
-plt.plot(points[:,2],U[:],'-*') #plot the data
+plt.plot(ptLine,U[:],'-*') #plot the data
 plt.show()

@@ -56,12 +56,12 @@ if (len(sys.argv)<2) :
 #===================
 # Ergun Analysis from Christoph
 #===================
-rhoG=1000
+rhoG=10
 dp = 0.001			# particle diameter
 phip = 1			# sphericity
 epsilon = 0.451335              # void fraction
 L = 0.0156			# length of bed
-nuG = 1.*10**-4			# kinemat Visk in m2/s
+nuG = 1.5*10**-4			# kinemat Visk in m2/s
 muG = nuG*rhoG			# dynam visc in Pa s
 
 #==================================

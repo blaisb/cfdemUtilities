@@ -24,7 +24,7 @@ import numpy
 import matplotlib.pyplot as plt
 import sys
 import pylab 
-
+from scipy.interpolate import interp1d
 #-------------------------------
 
 
@@ -34,7 +34,7 @@ import pylab
 pdf=True
 xErrBar=False
 
-ptSims=[-2]
+ptSims=[-3]
 ptExp=[-4]
 datN={}
 datP={}
@@ -49,15 +49,17 @@ plotAvg=True
 
 
 # Figures
-plt.rcParams['figure.figsize'] = 10, 7
+plt.rcParams['figure.figsize'] = 15, 12
 params = {'backend': 'ps',
-             'axes.labelsize': 20,
-             'text.fontsize': 16,
-             'legend.fontsize': 20,
-             'xtick.labelsize': 20,
-             'ytick.labelsize': 20,
-             'text.usetex': True,
+             'axes.labelsize': 28,
+             'text.fontsize': 24,
+             'legend.fontsize': 24,
+             'xtick.labelsize': 24,
+             'ytick.labelsize': 24,
+             'text.usetex': False,
              }
+plt.rcParams['xtick.major.pad']='8'
+plt.rcParams['ytick.major.pad']='8'
 plt.rcParams.update(params)
 
 colors=['red','blue','green','pink']
@@ -154,15 +156,23 @@ for i,arg in enumerate(argList):
         if "experimental" in arg:
             lab=arg
             if(plotExp):
-                ax.plot(datN[arg],fraction,'--o',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+                ax.plot(datN[arg],fraction,'k--o',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
         else:
             lab="Simulations"
-            ax.plot(datN[arg],fraction,'k-^',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+            ax.plot(datN[arg],fraction,'k-^',label=lab,linewidth=2.0,ms=13,mfc='grey',mew=2)
             print "Saving results"
             B = [numpy.asarray(datN[arg]).T,numpy.asarray(fraction).T]
             numpy.savetxt("processedNumericalData", numpy.asarray(B).T, fmt='%.8e', delimiter=' ', newline='\n')
 
-        
+            f = interp1d(numpy.asarray(fraction).squeeze(),numpy.asarray(datN[arg]))
+            print " NSS is :",f(0.982) 
+            f = interp1d(numpy.asarray(datN[arg]),numpy.asarray(fraction).squeeze())
+            print " 375 RPM :",f(375) 
+            print " 402 RPM :",f(402) 
+            print " 416 RPM :",f(416)
+            print " 428 RPM :",f(428.2)
+            print " 429 RPM :",f(429.8)
+            print " 466 RPM :",f(466)
         xSusp[arg]=fraction
 
 
@@ -179,14 +189,23 @@ if (plotAvg):
     fErr=confFactor*xErr
     for i,j in enumerate(fErr):
         fErr[i]=min(1.-xAvg[i],j)
-    lab="Averaged experiments"
+    lab="Experiments"
     if xErrBar:
-        (_, caps, _)=ax.errorbar(NAvg,xAvg,xerr=confFactor*NErr,yerr=confFactor*xErr,fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+        (_, caps, _)=ax.errorbar(NAvg,xAvg,xerr=confFactor*NErr,yerr=confFactor*xErr,fmt='ko-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+
     else :
-        (_, caps, _)=ax.errorbar(NAvg,xAvg,yerr=[confFactor*xErr,fErr],fmt='o-',label=lab,linewidth=2.0,ms=11,mfc='none',mew=2)
+        (_, caps, _)=ax.errorbar(NAvg,xAvg,yerr=[confFactor*xErr,fErr],fmt='ko-',label=lab,linewidth=2.0,ms=13,mfc='none',mew=2)
+        f = interp1d(numpy.asarray(xAvg).squeeze(),numpy.asarray(NAvg))
+        print " NSS experimental is :",f(0.982) 
+        f = interp1d(numpy.asarray(NAvg),numpy.asarray(xAvg).squeeze())
+        print " 375 RPM :",f(375) 
+        print " 402 RPM :",f(402) 
+        print " 416 RPM :",f(416)
+        print " 428 RPM :",f(428.2)
+        print " 429 RPM :",f(429.8)
+        print " 466 RPM :",f(466)
 
-
-plt.ylabel('Fraction of suspended particles')
+plt.ylabel('Fraction of suspended particles - $X_{susp}$')
 plt.xlabel('Speed N [RPM]')
 plt.legend(loc=4)
 plt.ylim([-0.05,1.05])

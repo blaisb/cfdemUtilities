@@ -79,7 +79,7 @@ diff=acc2[:,:]-acc[:,:]
 
 plt.imshow(acc2[:,:]-acc[:,:],extent=extent,origin='lower',interpolation="bicubic")
 
-cbar = plt.colorbar( drawedges=False)
+cbar = plt.colorbar( drawedges=False,ticks=[0.,0.05])
 tick_locator = ticker.MaxNLocator(nbins=7)
 cbar.locator = tick_locator
 cbar.update_ticks()
@@ -95,6 +95,7 @@ else:
 if(contour):
     maxdiff=numpy.nanmax(diff)
     mindiff=numpy.nanmin(diff)
+
     levels = numpy.arange(mindiff, maxdiff+tol, (maxdiff-mindiff)/10.)
     CS=plt.contourf(acc2[:,:]-acc[:,:], levels, hold='on',
         origin='lower', extent=extent)
